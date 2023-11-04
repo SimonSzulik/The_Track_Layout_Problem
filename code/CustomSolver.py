@@ -1,3 +1,13 @@
+"""
+ * ************************
+ *	Bachelor-Thesis Simon Szulik
+ *
+ *      The Track Layout Problem
+ *      from a SAT-Solving Perspective
+ *
+ * ************************
+"""
+
 from pysat.solvers import Lingeling
 
 

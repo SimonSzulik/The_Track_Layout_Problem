@@ -11,20 +11,20 @@
 from itertools import combinations as combi
 from pysat.formula import CNF
 
+node_track_variable = [[]]  # σ(v_i,t_k)
+relational_sequence = [[]]  # ω(v_i,v_j)
+total_sequence = [[]]  # ϕ(v_i,p)
+
 """
  * ***** σ-Vars and it's clauses ***** *
- * ***** Which node is on which track? ***** *
- * ***** each node has t variables ***** *
+ * ***** each node n has t variables ***** *
+ * ***** first i variables stand for the node n_i to be on track t_k ***** *
 """
-
-node_track_variable = [[]]
-relational_sequence = [[]]
-total_sequence = [[]]
 
 
 def get_node_clauses(nodes, tracks, edges):
     global node_track_variable
-    # nodes * tracks variables
+
     node_track_variable = [[0 for _ in range(tracks)] for _ in range(nodes)]
     unique_number = 1
     formula = CNF()
@@ -58,13 +58,13 @@ def get_node_clauses(nodes, tracks, edges):
 
 """
  * ***** ω and and its clauses  ***** *
- * ***** first i variables stand for the node n to be left of node m on track t ***** *
+ * ***** first j variables stand for the node n_i to be left of node n_j ***** *
 """
 
 
-def get_sequence_clauses_relation(nodes, tracks, edges):  # Variable ω
-    # wie viele variablen ?
+def get_sequence_clauses_relation(nodes, tracks, edges):
     global relational_sequence
+
     relational_sequence = [[0 for _ in range(nodes)] for _ in range(nodes)]
     unique_number = nodes * tracks + 100
     formula = CNF()
@@ -77,20 +77,17 @@ def get_sequence_clauses_relation(nodes, tracks, edges):  # Variable ω
             # append clause to formula that negates i == j case
             if left_node == right_node:
                 formula.append([-relational_sequence[left_node][right_node]])
-        # append variable to formula
-        # Das brauche ich nicht. da sonst bei jeder mind. 1 wahr wird !!
-        # formula.append([relational_sequence[left_node][right_node] for right_node in range(nodes)])
 
     # asymmetric
-    # wie viele klauseln ?
     for left_node in range(nodes):
         for right_node in range(nodes):
             if left_node < right_node:
-                formula.append([-relational_sequence[left_node][right_node], relational_sequence[right_node][left_node]])
-                formula.append([-relational_sequence[right_node][left_node], relational_sequence[left_node][right_node]])
+                formula.append(
+                    [-relational_sequence[left_node][right_node], relational_sequence[right_node][left_node]])
+                formula.append(
+                    [-relational_sequence[right_node][left_node], relational_sequence[left_node][right_node]])
 
     # transitivity
-    # wie viee klauseln ?
     for left_node in range(nodes):
         for middle_node in range(nodes):
             for right_node in range(nodes):
@@ -99,8 +96,7 @@ def get_sequence_clauses_relation(nodes, tracks, edges):  # Variable ω
                                     -relational_sequence[middle_node][right_node],
                                     relational_sequence[left_node][right_node]])
 
-    # wenn knoten nicht auf selben track liegen, können sie auch keine reihenfolge haben.
-    # -x und -y -> z // zu CNF ==> x or y or z
+    # Implication to ensure sequenced nodes are on the same track
     for left_node in range(nodes):
         for right_node in range(nodes):
             for track in range(tracks):
@@ -109,25 +105,13 @@ def get_sequence_clauses_relation(nodes, tracks, edges):  # Variable ω
                     formula.append(
                         [-relational_sequence[left_node][right_node], node_track_variable[right_node][track]])
 
-            #   formula.append([node_track_variable[left_node][track], node_track_variable[right_node][track],
-            #                  -relational_sequence[left_node][right_node]])
-
-    # No crosses
-    # first get all disjuct pairs
-    # ersten t variablen in track_node_var gehören zu knoten 0, etc...
+    # No Crossings
     edge_pairs = get_disjoint_edge_pairs(edges)
     track_pairs = get_track_pairs(tracks)
-    # print(edge_pairs)
-    #  print(track_pairs)
-    #  print(node_track_variable)
-    #  print(relation_sequence)
 
-    #  for t in range(2):
-    #      print(t)
-
-    # wie viele klauseln ?
     for edge_pair in edge_pairs:
         for track_pair in track_pairs:
+            # Swap for both track cases
             for swap in range(2):
                 if swap == 0:
                     formula.append([-node_track_variable[edge_pair[0][0]][track_pair[0]],
@@ -157,19 +141,18 @@ def get_sequence_clauses_relation(nodes, tracks, edges):  # Variable ω
                                     -node_track_variable[edge_pair[1][0]][track_pair[1]],
                                     -relational_sequence[edge_pair[1][0]][edge_pair[0][0]],
                                     -relational_sequence[edge_pair[0][1]][edge_pair[1][1]]])
-
     return formula
 
 
 """
  * ***** ϕ and and its clauses  ***** *
- * ***** first i variables stand for the node n to be left of node m on track t ***** *
+ * ***** first i variables stand for the node n being on position p_i ***** *
 """
 
 
-def get_sequence_total_order(nodes, tracks, edges):  # Variable ϕ
-    # wie viele variablen ?
+def get_sequence_total_order(nodes, tracks, edges):
     global total_sequence
+
     total_sequence = [[0 for _ in range(nodes)] for _ in range(nodes)]
     unique_number = nodes * tracks + 100
     formula = CNF()
@@ -186,8 +169,7 @@ def get_sequence_total_order(nodes, tracks, edges):  # Variable ϕ
         for comb in combi([total_sequence[node][position] for position in range(nodes)], 2):
             formula.append([-comb[0], -comb[1]])
 
-    # überschneidungsverbot !!
-    # so, dass nicht mehrere knoten auf der selben position sein dürfen !!
+    # No Overlaps -> no 2 Nodes have the same Position
     for node in range(nodes):
         for position in range(nodes):
             for node_2 in range(nodes):
@@ -195,11 +177,9 @@ def get_sequence_total_order(nodes, tracks, edges):  # Variable ϕ
                     continue
                 formula.append([-total_sequence[node][position], -total_sequence[node_2][position]])
 
-    # No crosses
+    # No Crossings
     edge_pairs = get_disjoint_edge_pairs(edges)
     track_pairs = get_track_pairs(tracks)
-    # print(edge_pairs)
-    # print(track_pairs)
 
     for edge_pair in edge_pairs:
         for track_pair in track_pairs:
@@ -229,10 +209,10 @@ def get_sequence_total_order(nodes, tracks, edges):  # Variable ϕ
                                                             -total_sequence[edge_pair[1][0]][b],
                                                             -total_sequence[edge_pair[0][1]][d],
                                                             -total_sequence[edge_pair[1][1]][c]])
-
     return formula
 
 
+# help function to all edge pairs to check for crossings
 def get_disjoint_edge_pairs(edges):
     edge_list = [(i, j) for i in range(len(edges)) for j in range(len(edges[i])) if edges[i][j] == 1]
     disjoint_pairs = []
@@ -247,7 +227,7 @@ def get_disjoint_edge_pairs(edges):
     return disjoint_pairs
 
 
-# so, dass nur track paare die direkt aufeinanderfolgen betrachtet werden
+# help function to get neighbored track pairs
 def get_track_pairs(tracks):
     track_pairs = []
     for i in range(1, tracks):
