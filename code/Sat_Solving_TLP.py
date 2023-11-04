@@ -7,10 +7,12 @@
  *
  * ************************
 """
+
 # imports
 from Create_Formula import get_node_clauses
 from Create_Formula import get_sequence_clauses_relation, get_sequence_total_order
 from CustomSolver import CustomSolver
+from String_Formatter import get_position, get_sequence
 
 """
  * ***** Beispielgraph ***** *
@@ -34,9 +36,10 @@ for i in range(nodes - 1):
 """
  * ***** Collecting all clauses and calculate with Lingeling ***** *
 """
+
 formula = get_node_clauses(nodes, tracks, edges)
-#formula.extend(get_sequence_clauses_relation(nodes, tracks, edges))
-formula.extend(get_sequence_total_order(nodes, tracks, edges))
+formula.extend(get_sequence_clauses_relation(nodes, tracks, edges))
+#formula.extend(get_sequence_total_order(nodes, tracks, edges))
 #formula = get_sequence_total_order(nodes, tracks, edges)
 
 solver = CustomSolver()
@@ -46,3 +49,5 @@ model = solver.get_model() if solver.solve() else []
 print(model)
 print(solver.evaluate_formula(model))
 print(formula.clauses)
+get_position(model, nodes, tracks)
+get_sequence(model[nodes*nodes:], nodes, tracks)
