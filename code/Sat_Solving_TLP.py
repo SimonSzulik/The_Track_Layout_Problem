@@ -15,56 +15,47 @@ from CustomSolver import CustomSolver
 from String_Formatter import get_position, get_order
 
 """
- * ***** Space for Example Graphs ***** *
+ * ***** F(G,t) ***** *
+ * n = nodes, g = Graph as adjacency matrix, t = tracks, m = SAT-Method 1/2 = Relational Sequence/Total Order )
 """
 
-nodes = 4
-tracks = 4
 
-# adjacency matrix
-edges = [[0 for _ in range(nodes)] for _ in range(nodes)]
+def compute_tlp(nodes, graph, tracks, method):
+    """
+     * ***** Collecting all Clauses ***** *
+    """
+    formula = get_node_clauses(nodes, tracks, graph)
+    if method == 1:
+        formula.extend(get_sequence_clauses_relation(nodes, tracks, graph))
+    elif method == 2:
+        formula.extend(get_sequence_total_order(nodes, tracks, graph))
+    else:
+        print("wrong method")
 
-# complete graph
-for i in range(nodes - 1):
-    for j in range(i + 1, nodes):
-        edges[i][j] = 1
+    """
+     * ***** Compute Sat-Solving-Model if possible ***** *
+    """
+    start = time.time()
 
-"""
- * ***** Space for Example Graphs ***** *
-"""
+    solver = CustomSolver()
+    solver.add(formula)
+    model = solver.get_model() if solver.solve() else []
 
-"""
- * ***** Collecting all Clauses and calculate with Lingeling ***** *
- --> Comment out the Methods needed and comment the others
-"""
-# For both methods
-formula = get_node_clauses(nodes, tracks, edges)
-# formula.extend(get_sequence_clauses_relation(nodes, tracks, edges))
-formula.extend(get_sequence_total_order(nodes, tracks, edges))
+    end = time.time()
 
-"""
- * ***** Collecting all Clauses and calculate with Lingeling ***** *
-"""
+    print("The Sat-Formula", model)
+    print("calculated to", solver.evaluate_formula(model), "in", end - start, "seconds.")
+#   print(formula.clauses)
 
-"""
- * ***** Compute Sat-Solving-Model if possible and print the Track-Layout-Configuration as text ***** *
-  --> Comment out the Methods needed and comment the others
-"""
-start = time.time()
+    """
+     * ***** Print TLP configuration as text ***** *
+    """
+    print("\n" "The TLP has the following configuration: \n")
+    get_position(model, nodes, tracks)
 
-solver = CustomSolver()
-solver.add(formula)
-model = solver.get_model() if solver.solve() else []
-
-end = time.time()
-
-print("The Sat-Formula", model)
-print("calculated to", solver.evaluate_formula(model), "in", end-start, "seconds.")
-print(formula.clauses)
-
-"""
- * ***** add "1/2" to get_order parameters to get the matching sequence/total_order output***** *
-"""
-get_position(model, nodes, tracks)
-get_order(model[nodes*tracks:], nodes, tracks, 2)
-
+    if method == 1:
+        get_order(model[nodes * tracks:], nodes, tracks, 1)
+    elif method == 2:
+        get_order(model[nodes * tracks:], nodes, tracks, 2)
+    else:
+        print("wrong method")
