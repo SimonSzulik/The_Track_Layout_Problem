@@ -15,7 +15,6 @@ def get_position(variables, nodes, tracks):
         return
     for node in range(1, nodes + 1):
         for track in range(1, tracks + 1):
-          #  print(((node - 1) * nodes + track) - 1)
             if variables[((node - 1) * tracks + track) - 1] > 0:
                 print(f"Node {node} is on track {track}")
     return

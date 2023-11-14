@@ -9,13 +9,14 @@
 """
 
 from Sat_Solving_TLP import compute_tlp
+from Data_Script import get_dataset
 
 """
  * ***** Space for Example Graphs ***** *
 """
 
 nodes = 4
-tracks = 2
+tracks = 3
 
 # adjacency matrix
 edges = [[0 for _ in range(nodes)] for _ in range(nodes)]
@@ -37,8 +38,18 @@ edges[2][3] = 1
 edges[3][2] = 1
 
 """
+ * ***** Dataset to analyze ***** *
+"""
+test_graphs = get_dataset()
+for filename, matrix in test_graphs.items():
+    print(f"File: {filename}")
+    print("adjacency matrix:")
+    print(matrix)
+    edges = matrix
+    print("------")
+
+"""
  * ***** Compute ***** *
 """
 
-compute_tlp(4, edges, tracks, 2)
-
+compute_tlp(len(edges), edges, tracks, 1)

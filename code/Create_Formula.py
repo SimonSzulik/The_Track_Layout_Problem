@@ -82,10 +82,11 @@ def get_sequence_clauses_relation(nodes, tracks, edges):
     for left_node in range(nodes):
         for right_node in range(nodes):
             if left_node < right_node:
-                # nur wenn beide aufm gleichen track sind
+                # when both are on same track
                 for track in range(tracks):
                     formula.append([-node_track_variable[left_node][track], -node_track_variable[right_node][track],
-                                   relational_sequence[left_node][right_node], relational_sequence[right_node][left_node]])
+                                    relational_sequence[left_node][right_node],
+                                    relational_sequence[right_node][left_node]])
                 formula.append(
                     [-relational_sequence[left_node][right_node], -relational_sequence[right_node][left_node]])
 
@@ -105,9 +106,6 @@ def get_sequence_clauses_relation(nodes, tracks, edges):
                 if left_node != right_node:
                     formula.append([-relational_sequence[left_node][right_node], node_track_variable[right_node][track],
                                     -node_track_variable[left_node][track]])
-                   # formula.append([-relational_sequence[left_node][right_node], node_track_variable[left_node][track]])
-                    #formula.append(
-                     #   [-relational_sequence[left_node][right_node], node_track_variable[right_node][track]])
 
     # No Crossings
     edge_pairs = get_disjoint_edge_pairs(edges)
@@ -115,36 +113,33 @@ def get_sequence_clauses_relation(nodes, tracks, edges):
 
     for edge_pair in edge_pairs:
         for track_pair in track_pairs:
-            # Swap for both track cases
-            for swap in range(2):
-                if swap == 0:
-                    formula.append([-node_track_variable[edge_pair[0][0]][track_pair[0]],
-                                    -node_track_variable[edge_pair[1][0]][track_pair[0]],
-                                    -node_track_variable[edge_pair[0][1]][track_pair[1]],
-                                    -node_track_variable[edge_pair[1][1]][track_pair[1]],
-                                    -relational_sequence[edge_pair[0][0]][edge_pair[1][0]],
-                                    -relational_sequence[edge_pair[1][1]][edge_pair[0][1]]])
+            formula.append([-node_track_variable[edge_pair[0][0]][track_pair[0]],
+                            -node_track_variable[edge_pair[1][0]][track_pair[0]],
+                            -node_track_variable[edge_pair[0][1]][track_pair[1]],
+                            -node_track_variable[edge_pair[1][1]][track_pair[1]],
+                            -relational_sequence[edge_pair[0][0]][edge_pair[1][0]],
+                            -relational_sequence[edge_pair[1][1]][edge_pair[0][1]]])
 
-                    formula.append([-node_track_variable[edge_pair[0][0]][track_pair[0]],
-                                    -node_track_variable[edge_pair[1][0]][track_pair[0]],
-                                    -node_track_variable[edge_pair[0][1]][track_pair[1]],
-                                    -node_track_variable[edge_pair[1][1]][track_pair[1]],
-                                    -relational_sequence[edge_pair[1][0]][edge_pair[0][0]],
-                                    -relational_sequence[edge_pair[0][1]][edge_pair[1][1]]])
-                else:
-                    formula.append([-node_track_variable[edge_pair[0][1]][track_pair[0]],
-                                    -node_track_variable[edge_pair[1][1]][track_pair[0]],
-                                    -node_track_variable[edge_pair[0][0]][track_pair[1]],
-                                    -node_track_variable[edge_pair[1][0]][track_pair[1]],
-                                    -relational_sequence[edge_pair[0][0]][edge_pair[1][0]],
-                                    -relational_sequence[edge_pair[1][1]][edge_pair[0][1]]])
+            formula.append([-node_track_variable[edge_pair[0][0]][track_pair[0]],
+                            -node_track_variable[edge_pair[1][0]][track_pair[0]],
+                            -node_track_variable[edge_pair[0][1]][track_pair[1]],
+                            -node_track_variable[edge_pair[1][1]][track_pair[1]],
+                            -relational_sequence[edge_pair[1][0]][edge_pair[0][0]],
+                            -relational_sequence[edge_pair[0][1]][edge_pair[1][1]]])
 
-                    formula.append([-node_track_variable[edge_pair[0][1]][track_pair[0]],
-                                    -node_track_variable[edge_pair[1][1]][track_pair[0]],
-                                    -node_track_variable[edge_pair[0][0]][track_pair[1]],
-                                    -node_track_variable[edge_pair[1][0]][track_pair[1]],
-                                    -relational_sequence[edge_pair[1][0]][edge_pair[0][0]],
-                                    -relational_sequence[edge_pair[0][1]][edge_pair[1][1]]])
+            formula.append([-node_track_variable[edge_pair[0][1]][track_pair[0]],
+                            -node_track_variable[edge_pair[1][1]][track_pair[0]],
+                            -node_track_variable[edge_pair[0][0]][track_pair[1]],
+                            -node_track_variable[edge_pair[1][0]][track_pair[1]],
+                            -relational_sequence[edge_pair[0][0]][edge_pair[1][0]],
+                            -relational_sequence[edge_pair[1][1]][edge_pair[0][1]]])
+
+            formula.append([-node_track_variable[edge_pair[0][1]][track_pair[0]],
+                            -node_track_variable[edge_pair[1][1]][track_pair[0]],
+                            -node_track_variable[edge_pair[0][0]][track_pair[1]],
+                            -node_track_variable[edge_pair[1][0]][track_pair[1]],
+                            -relational_sequence[edge_pair[1][0]][edge_pair[0][0]],
+                            -relational_sequence[edge_pair[0][1]][edge_pair[1][1]]])
     return formula
 
 
@@ -193,34 +188,31 @@ def get_sequence_total_order(nodes, tracks, edges):
                         for d in range(nodes):
                             # all different
                             if len({a, b, c, d}) == 4:
-                                # maybe or weg lassen
-                                if (a < b and c < d) or (b < a and d < c):
-                                    # brauch ich swap ?
-                                    for swap in range(2):
-                                        if swap == 0:
-                                            formula.append([-node_track_variable[edge_pair[0][0]][track_pair[0]],
-                                                            -node_track_variable[edge_pair[1][0]][track_pair[0]],
-                                                            -node_track_variable[edge_pair[0][1]][track_pair[1]],
-                                                            -node_track_variable[edge_pair[1][1]][track_pair[1]],
-                                                            -total_sequence[edge_pair[0][0]][a],
-                                                            -total_sequence[edge_pair[1][0]][b],
-                                                            -total_sequence[edge_pair[0][1]][d],
-                                                            -total_sequence[edge_pair[1][1]][c]])
-                                        else:
-                                            formula.append([-node_track_variable[edge_pair[0][1]][track_pair[0]],
-                                                            -node_track_variable[edge_pair[1][1]][track_pair[0]],
-                                                            -node_track_variable[edge_pair[0][0]][track_pair[1]],
-                                                            -node_track_variable[edge_pair[1][0]][track_pair[1]],
-                                                            -total_sequence[edge_pair[0][0]][a],
-                                                            -total_sequence[edge_pair[1][0]][b],
-                                                            -total_sequence[edge_pair[0][1]][d],
-                                                            -total_sequence[edge_pair[1][1]][c]])
+                                if a < b and c < d:
+                                    formula.append([-node_track_variable[edge_pair[0][0]][track_pair[0]],
+                                                    -node_track_variable[edge_pair[1][0]][track_pair[0]],
+                                                    -node_track_variable[edge_pair[0][1]][track_pair[1]],
+                                                    -node_track_variable[edge_pair[1][1]][track_pair[1]],
+                                                    -total_sequence[edge_pair[0][0]][a],
+                                                    -total_sequence[edge_pair[1][0]][b],
+                                                    -total_sequence[edge_pair[0][1]][d],
+                                                    -total_sequence[edge_pair[1][1]][c]])
+
+                                    formula.append([-node_track_variable[edge_pair[0][1]][track_pair[0]],
+                                                    -node_track_variable[edge_pair[1][1]][track_pair[0]],
+                                                    -node_track_variable[edge_pair[0][0]][track_pair[1]],
+                                                    -node_track_variable[edge_pair[1][0]][track_pair[1]],
+                                                    -total_sequence[edge_pair[0][0]][a],
+                                                    -total_sequence[edge_pair[1][0]][b],
+                                                    -total_sequence[edge_pair[0][1]][d],
+                                                    -total_sequence[edge_pair[1][1]][c]])
     return formula
 
 
 # help function to all edge pairs to check for crossings
 def get_disjoint_edge_pairs(edges):
     edge_list = [(i, j) for i in range(len(edges)) for j in range(len(edges[i])) if edges[i][j] == 1]
+    print(edge_list)
     disjoint_pairs = []
 
     for i in range(len(edge_list)):
