@@ -82,10 +82,12 @@ def get_sequence_clauses_relation(nodes, tracks, edges):
     for left_node in range(nodes):
         for right_node in range(nodes):
             if left_node < right_node:
+                # nur wenn beide aufm gleichen track sind
+                for track in range(tracks):
+                    formula.append([-node_track_variable[left_node][track], -node_track_variable[right_node][track],
+                                   relational_sequence[left_node][right_node], relational_sequence[right_node][left_node]])
                 formula.append(
-                    [-relational_sequence[left_node][right_node], relational_sequence[right_node][left_node]])
-                formula.append(
-                    [-relational_sequence[right_node][left_node], relational_sequence[left_node][right_node]])
+                    [-relational_sequence[left_node][right_node], -relational_sequence[right_node][left_node]])
 
     # transitivity
     for left_node in range(nodes):
@@ -101,9 +103,11 @@ def get_sequence_clauses_relation(nodes, tracks, edges):
         for right_node in range(nodes):
             for track in range(tracks):
                 if left_node != right_node:
-                    formula.append([-relational_sequence[left_node][right_node], node_track_variable[left_node][track]])
-                    formula.append(
-                        [-relational_sequence[left_node][right_node], node_track_variable[right_node][track]])
+                    formula.append([-relational_sequence[left_node][right_node], node_track_variable[right_node][track],
+                                    -node_track_variable[left_node][track]])
+                   # formula.append([-relational_sequence[left_node][right_node], node_track_variable[left_node][track]])
+                    #formula.append(
+                     #   [-relational_sequence[left_node][right_node], node_track_variable[right_node][track]])
 
     # No Crossings
     edge_pairs = get_disjoint_edge_pairs(edges)
@@ -189,7 +193,9 @@ def get_sequence_total_order(nodes, tracks, edges):
                         for d in range(nodes):
                             # all different
                             if len({a, b, c, d}) == 4:
+                                # maybe or weg lassen
                                 if (a < b and c < d) or (b < a and d < c):
+                                    # brauch ich swap ?
                                     for swap in range(2):
                                         if swap == 0:
                                             formula.append([-node_track_variable[edge_pair[0][0]][track_pair[0]],

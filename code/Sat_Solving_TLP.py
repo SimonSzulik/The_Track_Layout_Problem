@@ -45,7 +45,7 @@ def compute_tlp(nodes, graph, tracks, method):
 
     print("The Sat-Formula", model)
     print("calculated to", solver.evaluate_formula(model), "in", end - start, "seconds.")
-#   print(formula.clauses)
+    print(len(formula.clauses))
 
     """
      * ***** Print TLP configuration as text ***** *

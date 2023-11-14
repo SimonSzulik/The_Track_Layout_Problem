@@ -15,7 +15,7 @@ from Sat_Solving_TLP import compute_tlp
 """
 
 nodes = 4
-tracks = 4
+tracks = 2
 
 # adjacency matrix
 edges = [[0 for _ in range(nodes)] for _ in range(nodes)]
@@ -27,12 +27,18 @@ for i in range(nodes - 1):
 
 # Edges for Test Graphs
 
-# edges[i][j] = 1
-# edges[j][i] = 1
+edges[0][1] = 1
+edges[1][0] = 1
+
+edges[1][2] = 1
+edges[2][1] = 1
+
+edges[2][3] = 1
+edges[3][2] = 1
 
 """
  * ***** Compute ***** *
 """
 
-compute_tlp(4, edges, 4, 1)
+compute_tlp(4, edges, tracks, 2)
 

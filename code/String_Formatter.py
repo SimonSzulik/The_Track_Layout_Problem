@@ -15,7 +15,8 @@ def get_position(variables, nodes, tracks):
         return
     for node in range(1, nodes + 1):
         for track in range(1, tracks + 1):
-            if variables[((node - 1) * nodes + track) - 1] > 0:
+          #  print(((node - 1) * nodes + track) - 1)
+            if variables[((node - 1) * tracks + track) - 1] > 0:
                 print(f"Node {node} is on track {track}")
     return
 
@@ -28,7 +29,7 @@ def get_order(variables, nodes, tracks, order):
                 right_list = []
 
                 for node in range(1, nodes + 1):
-                    for node_2 in range(1, tracks + 1):
+                    for node_2 in range(1, nodes + 1):
                         if variables[((node - 1) * nodes + node_2) - 1] > 0:
                             right_list.append(node_2)
                     if not right_list:
