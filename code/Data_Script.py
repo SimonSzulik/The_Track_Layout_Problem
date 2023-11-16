@@ -13,28 +13,21 @@ import networkx as nx
 
 
 def get_dataset():
-    # Path to dataset
-    data_folder_path = '../data'
+    data_set = []
+    with open('../Data_Sets/Data_Set_10*n_Nodes.txt', 'r') as f:
+        lines = f.readlines()
+        for line in lines:
+            data_set.append(line.strip())
 
-    test_graphs = {}
-    counter = 0
-    # Loop through dataset
-    for filename in os.listdir(data_folder_path):
-        if filename.endswith('.gml'):
-            file_path = os.path.join(data_folder_path, filename)
+        # Path to dataset
+        data_folder_path = '../data'
+        test_graphs = {}
 
-            graph = nx.read_gml(file_path)
-
-            num_nodes = graph.number_of_nodes()
-            num_edges = graph.number_of_edges()
-
-            # graph dependencies
-            if num_nodes == 10:
-                # print(f"File: {filename}, Nodes: {num_nodes}, Edges: {num_edges}")
-                # print("------")
+        # Loop through dataset
+        for filename in os.listdir(data_folder_path):
+            if filename in data_set:
+                file_path = os.path.join(data_folder_path, filename)
+                graph = nx.read_gml(file_path)
                 test_graphs[filename] = nx.to_numpy_array(graph)
-                counter += 1
-            if counter == 1:
-                break
 
     return test_graphs

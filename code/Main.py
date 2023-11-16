@@ -41,15 +41,20 @@ edges[3][2] = 1
  * ***** Dataset to analyze ***** *
 """
 test_graphs = get_dataset()
-for filename, matrix in test_graphs.items():
-    print(f"File: {filename}")
-    print("adjacency matrix:")
-    print(matrix)
-    edges = matrix
-    print("------")
+print(test_graphs)
+"""
+* toDO:
+* für jeden graphen methode ausführen anfangend von 1 track hoch bis es funktioniert
+"""
+#for filename, matrix in test_graphs.items():
+ #   print(f"File: {filename}")
+  #  print("adjacency matrix:")
+   # print(matrix)
+    #edges = matrix
+    #print("------")
 
 """
  * ***** Compute ***** *
 """
 
-compute_tlp(len(edges), edges, tracks, 1)
+#compute_tlp(len(edges), edges, tracks, 1)
