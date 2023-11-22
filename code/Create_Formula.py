@@ -25,6 +25,9 @@ total_sequence = [[]]  # ϕ(v_i,p)
 def get_node_clauses(nodes, tracks, edges):
     global node_track_variable
 
+    # Was ist mit methode 3 ?
+    # Das würde die Variablen Anzahl erhöhen, aber die größte Klauselmenge (Kreuzungen) um einiges verkleiner. 6 vrs pro Klausel -> 4 pro Klausel
+
     node_track_variable = [[0 for _ in range(tracks)] for _ in range(nodes)]
     unique_number = 1
     formula = CNF()

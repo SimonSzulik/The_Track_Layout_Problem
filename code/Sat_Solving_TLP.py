@@ -47,7 +47,6 @@ def compute_tlp(nodes, graph, tracks, method):
     print("calculated to", solver.evaluate_formula(model), "in", end - start, "seconds.")
     print("The formula contained", len(formula.clauses), "clauses")
 
-    print(formula.clauses)
     """
      * ***** Print TLP configuration as text ***** *
     """
