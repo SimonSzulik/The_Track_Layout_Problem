@@ -51,7 +51,9 @@ def get_node_clauses(nodes, tracks, edges):
     # add restrictive neighbor clauses
     for neighbor in neighbor_list:
         for track in range(tracks):
-            formula.append([-node_track_variable[neighbor[0]][track], -node_track_variable[neighbor[1]][track]])
+            if (([-node_track_variable[neighbor[0]][track], -node_track_variable[neighbor[1]][track]] not in formula.clauses) and
+                    ([-node_track_variable[neighbor[1]][track], -node_track_variable[neighbor[0]][track]] not in formula.clauses)):
+                formula.append([-node_track_variable[neighbor[0]][track], -node_track_variable[neighbor[1]][track]])
 
     return formula
 

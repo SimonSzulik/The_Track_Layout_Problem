@@ -16,7 +16,7 @@ from Data_Script import get_dataset
 """
 
 nodes = 4
-tracks = 2
+tracks = 3
 
 # adjacency matrix
 edges = [[0 for _ in range(nodes)] for _ in range(nodes)]
@@ -61,4 +61,4 @@ for filename, matrix in test_graphs.items():
  * ***** Compute ***** *
 """
 
-compute_tlp(len(edges), edges, tracks, 2)
+compute_tlp(len(edges), edges, tracks, 1)
