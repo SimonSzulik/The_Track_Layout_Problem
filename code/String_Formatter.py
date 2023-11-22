@@ -11,7 +11,7 @@
 
 def get_position(variables, nodes, tracks):
     track_list = {}
-    for t in range(1, tracks+1):
+    for t in range(1, tracks + 1):
         track_list[t] = []
     if not variables:
         print("No Solution found")
@@ -30,7 +30,6 @@ def get_order(variables, nodes, tracks, order):
             case 1:
                 variables = sorted(variables, key=lambda x: abs(x))
                 right_list = []
-
                 for node in range(1, nodes + 1):
                     for node_2 in range(1, nodes + 1):
                         if variables[((node - 1) * nodes + node_2) - 1] > 0:

@@ -46,30 +46,30 @@ def compute_tlp(nodes, graph, tracks, method):
     print("The Sat-Formula", model)
     print("calculated to", solver.evaluate_formula(model), "in", end - start, "seconds.")
     print("The formula contained", len(formula.clauses), "clauses")
-
     """
      * ***** Print TLP configuration as text ***** *
     """
     print("\n" "The TLP has the following configuration: \n")
     track_list = get_position(model, nodes, tracks)
-    #  print(track_list)
+    # das kann weg
+    # print(track_list)
 
     if method == 1:
-        longest_neighborlist = []
         order_list = get_order(model[nodes * tracks:], nodes, tracks, 1)
-        for track_key in track_list:
-            maximum = 0
-            for node_value in track_list[track_key]:
-                if len(order_list[node_value]) > maximum:
-                    maximum = len(order_list[node_value])
-                    longest_neighborlist.append(node_value)
 
-        for track_order in longest_neighborlist:
-            right_nodes = " ---- "
-            for right_neighbor in order_list[track_order]:
-                right_nodes += str(right_neighbor)
-                right_nodes += " ---- "
-            print("----", track_order, right_nodes)
+        for track_key in track_list:
+            unordered_track_list = {key: order_list[key] for key in track_list[track_key] if key in order_list}
+            ordered_track_list = dict(sorted(unordered_track_list.items(), key=lambda item: len(item[1]), reverse=True))
+            track_list[track_key] = list(ordered_track_list.keys())
+
+        track = ""
+        for track_key in track_list:
+            for sequence_node in track_list[track_key]:
+                track += "  ----  " + str(sequence_node)
+            print(track)
+            track = ""
+
+        # TO DO
     elif method == 2:
         get_order(model[nodes * tracks:], nodes, tracks, 2)
     else:

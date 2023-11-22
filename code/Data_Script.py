@@ -12,9 +12,9 @@ import os
 import networkx as nx
 
 
-def get_dataset():
+def get_dataset(data):
     data_set = []
-    with open('../Data_Sets/Data_Set_10*n_Nodes.txt', 'r') as f:
+    with open(data, 'r') as f:
         lines = f.readlines()
         for line in lines:
             data_set.append(line.strip())

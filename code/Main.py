@@ -16,7 +16,7 @@ from Data_Script import get_dataset
 """
 
 nodes = 4
-tracks = 3
+tracks = 2
 
 # adjacency matrix
 edges = [[0 for _ in range(nodes)] for _ in range(nodes)]
@@ -40,21 +40,25 @@ edges[3][2] = 1
 """
  * ***** Dataset to analyze ***** *
 """
-test_graphs = get_dataset()
-print(test_graphs)
+test_graphs = get_dataset('../Data_Sets/Data_Set_10*n_Nodes.txt')
+
 """
 * toDO:
 * für jeden graphen methode ausführen anfangend von 1 track hoch bis es funktioniert
 """
-#for filename, matrix in test_graphs.items():
- #   print(f"File: {filename}")
-  #  print("adjacency matrix:")
-   # print(matrix)
-    #edges = matrix
-    #print("------")
+count = 0
+for filename, matrix in test_graphs.items():
+    print(f"File: {filename}")
+    print("adjacency matrix:")
+    print(matrix)
+    edges = matrix
+    print("------")
+    if count == 31:
+        break
+    count += 1
 
 """
  * ***** Compute ***** *
 """
 
-#compute_tlp(len(edges), edges, tracks, 1)
+compute_tlp(len(edges), edges, tracks, 2)

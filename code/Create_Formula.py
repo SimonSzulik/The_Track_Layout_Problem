@@ -126,20 +126,6 @@ def get_sequence_clauses_relation(nodes, tracks, edges):
                             -node_track_variable[edge_pair[1][1]][track_pair[1]],
                             -relational_sequence[edge_pair[1][0]][edge_pair[0][0]],
                             -relational_sequence[edge_pair[0][1]][edge_pair[1][1]]])
-
-            formula.append([-node_track_variable[edge_pair[0][1]][track_pair[0]],
-                            -node_track_variable[edge_pair[1][1]][track_pair[0]],
-                            -node_track_variable[edge_pair[0][0]][track_pair[1]],
-                            -node_track_variable[edge_pair[1][0]][track_pair[1]],
-                            -relational_sequence[edge_pair[0][0]][edge_pair[1][0]],
-                            -relational_sequence[edge_pair[1][1]][edge_pair[0][1]]])
-
-            formula.append([-node_track_variable[edge_pair[0][1]][track_pair[0]],
-                            -node_track_variable[edge_pair[1][1]][track_pair[0]],
-                            -node_track_variable[edge_pair[0][0]][track_pair[1]],
-                            -node_track_variable[edge_pair[1][0]][track_pair[1]],
-                            -relational_sequence[edge_pair[1][0]][edge_pair[0][0]],
-                            -relational_sequence[edge_pair[0][1]][edge_pair[1][1]]])
     return formula
 
 
@@ -197,15 +183,6 @@ def get_sequence_total_order(nodes, tracks, edges):
                                                     -total_sequence[edge_pair[1][0]][b],
                                                     -total_sequence[edge_pair[0][1]][d],
                                                     -total_sequence[edge_pair[1][1]][c]])
-
-                                    formula.append([-node_track_variable[edge_pair[0][1]][track_pair[0]],
-                                                    -node_track_variable[edge_pair[1][1]][track_pair[0]],
-                                                    -node_track_variable[edge_pair[0][0]][track_pair[1]],
-                                                    -node_track_variable[edge_pair[1][0]][track_pair[1]],
-                                                    -total_sequence[edge_pair[0][0]][a],
-                                                    -total_sequence[edge_pair[1][0]][b],
-                                                    -total_sequence[edge_pair[0][1]][d],
-                                                    -total_sequence[edge_pair[1][1]][c]])
     return formula
 
 
@@ -230,4 +207,5 @@ def get_track_pairs(tracks):
     track_pairs = []
     for i in range(1, tracks):
         track_pairs.append((i - 1, i))
+    print(track_pairs)
     return track_pairs
