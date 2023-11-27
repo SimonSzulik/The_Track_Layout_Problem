@@ -7,6 +7,7 @@
  *
  * ************************
 """
+import itertools
 # imports
 from itertools import combinations as combi
 from pysat.formula import CNF
@@ -14,8 +15,9 @@ from pysat.formula import CNF
 node_track_variable = [[]]  # σ(v_i,t_k)
 relational_sequence = [[]]  # ω(v_i,v_j)
 total_sequence = [[]]  # ϕ(v_i,p)
+same_track = [[]]  # ψ(v_i,v_j)
 
-"""
+""" Approach 2
  * ***** σ-Vars and it's clauses ***** *
  * ***** each node n has t variables ***** *
  * ***** first i variables stand for the node n_i to be on track t_k ***** *
@@ -33,7 +35,7 @@ def get_node_clauses(nodes, tracks, edges):
     formula = CNF()
     neighbor_list = []
 
-    # loop through variables and assign unique number
+    # loop through σ variables and assign unique number
     for node in range(nodes):
         for track in range(tracks):
             node_track_variable[node][track] = unique_number
@@ -54,8 +56,10 @@ def get_node_clauses(nodes, tracks, edges):
     # add restrictive neighbor clauses
     for neighbor in neighbor_list:
         for track in range(tracks):
-            if (([-node_track_variable[neighbor[0]][track], -node_track_variable[neighbor[1]][track]] not in formula.clauses) and
-                    ([-node_track_variable[neighbor[1]][track], -node_track_variable[neighbor[0]][track]] not in formula.clauses)):
+            if (([-node_track_variable[neighbor[0]][track],
+                  -node_track_variable[neighbor[1]][track]] not in formula.clauses) and
+                    ([-node_track_variable[neighbor[1]][track],
+                      -node_track_variable[neighbor[0]][track]] not in formula.clauses)):
                 formula.append([-node_track_variable[neighbor[0]][track], -node_track_variable[neighbor[1]][track]])
 
     return formula
@@ -74,7 +78,7 @@ def get_sequence_clauses_relation(nodes, tracks, edges):
     unique_number = nodes * tracks + 100
     formula = CNF()
 
-    # loop through variables and assign unique number
+    # loop through ω variables and assign unique number
     for left_node in range(nodes):
         for right_node in range(nodes):
             relational_sequence[left_node][right_node] = unique_number
@@ -134,9 +138,103 @@ def get_sequence_clauses_relation(nodes, tracks, edges):
     return formula
 
 
+""" Approach 2 improved
+ * ***** ω and and its clauses with improvement variable ψ, that shows if n_i and n_j are on the same track ***** *
+ * ***** first j variables stand for the node n_i to be left of node n_j ***** *
 """
+
+
+def get_sequence_clauses_relation_improved(nodes, tracks, edges):
+    global relational_sequence
+    global same_track
+
+    relational_sequence = [[0 for _ in range(nodes)] for _ in range(nodes)]
+    same_track = [[0 for _ in range(nodes)] for _ in range(nodes)]
+    unique_number = nodes * tracks + 100
+    unique_number_same_track = (nodes * tracks) + (nodes * nodes) + 100
+    formula = CNF()
+
+    # loop through ψ variables and assign unique number
+    for node_1 in range(nodes):
+        for node_2 in range(nodes):
+            if node_1 < node_2:
+                same_track[node_1][node_2] = unique_number_same_track
+                unique_number_same_track += 1
+
+    # implication that forces the ψ equivalent variable to be true if 2 nodes are on the same tack
+    print(same_track)
+    for node_1 in range(nodes):
+        for node_2 in range(nodes):
+            if node_1 < node_2:
+                for track in range(tracks):
+                    formula.append([-node_track_variable[node_1][track], -node_track_variable[node_2][track],
+                                    same_track[node_1][node_2]])
+
+    # loop through ω variables and assign unique number
+    for left_node in range(nodes):
+        for right_node in range(nodes):
+            relational_sequence[left_node][right_node] = unique_number
+            unique_number += 1
+            # append clause to formula that negates i == j case
+            if left_node == right_node:
+                formula.append([-relational_sequence[left_node][right_node]])
+
+    # asymmetric
+    for left_node in range(nodes):
+        for right_node in range(nodes):
+            if left_node < right_node:
+                # when both are on same track
+                for track in range(tracks):
+                    formula.append([-node_track_variable[left_node][track], -node_track_variable[right_node][track],
+                                    relational_sequence[left_node][right_node],
+                                    relational_sequence[right_node][left_node]])
+                formula.append(
+                    [-relational_sequence[left_node][right_node], -relational_sequence[right_node][left_node]])
+
+    # transitivity
+    for left_node in range(nodes):
+        for middle_node in range(nodes):
+            for right_node in range(nodes):
+                if left_node != middle_node and middle_node != right_node and left_node != right_node:
+                    formula.append([-relational_sequence[left_node][middle_node],
+                                    -relational_sequence[middle_node][right_node],
+                                    relational_sequence[left_node][right_node]])
+
+    # Implication to ensure sequenced nodes are on the same track
+    for left_node in range(nodes):
+        for right_node in range(nodes):
+            for track in range(tracks):
+                if left_node != right_node:
+                    formula.append([-relational_sequence[left_node][right_node], node_track_variable[right_node][track],
+                                    -node_track_variable[left_node][track]])
+
+    # No Crossings
+    edge_pairs = get_disjoint_edge_pairs(edges)
+
+    for edge_pair in edge_pairs:
+        # print(edge_pair)
+        # check if the 4 nodes are not all on the same track
+        # formula.append(-same_track[edge_pair[0][0]][edge_pair[1][1]])
+        # if same_track[edge_pair[0][0]][edge_pair[1][1]]:
+        # fix this shit somehow
+        formula.append([same_track[edge_pair[0][0]][edge_pair[1][1]],
+                        -same_track[edge_pair[0][0]][edge_pair[1][0]],
+                        -same_track[edge_pair[1][0]][edge_pair[1][1]],
+                        -relational_sequence[edge_pair[0][0]][edge_pair[1][0]],
+                        -relational_sequence[edge_pair[1][1]][edge_pair[0][1]]])
+
+        formula.append([same_track[edge_pair[0][0]][edge_pair[1][1]],
+                        -same_track[edge_pair[0][0]][edge_pair[1][0]],
+                        -same_track[edge_pair[1][0]][edge_pair[1][1]],
+                        -relational_sequence[edge_pair[1][0]][edge_pair[0][0]],
+                        -relational_sequence[edge_pair[0][1]][edge_pair[1][1]]])
+    return formula
+
+
+""" Approach 1 (bad and ultra slow)
  * ***** ϕ and and its clauses  ***** *
  * ***** first i variables stand for the node n being on position p_i ***** *
+ * ***** This Approach will not be further elaborated since it seems to be a way worse option ***** *
 """
 
 
@@ -209,8 +307,8 @@ def get_disjoint_edge_pairs(edges):
 
 # help function to get neighbored track pairs
 def get_track_pairs(tracks):
+    track_numbers = list(range(0, tracks))
     track_pairs = []
-    for i in range(1, tracks):
-        track_pairs.append((i - 1, i))
-    print(track_pairs)
+    track_pairs.extend(combi(track_numbers, 2))
+
     return track_pairs

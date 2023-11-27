@@ -14,7 +14,7 @@ def get_position(variables, nodes, tracks):
     for t in range(1, tracks + 1):
         track_list[t] = []
     if not variables:
-        print("No Solution found")
+        print("No Solution found for", tracks, "tracks")
         return
     for node in range(1, nodes + 1):
         for track in range(1, tracks + 1):
@@ -45,4 +45,5 @@ def get_order(variables, nodes, tracks, order):
                     for node_2 in range(1, nodes + 1):
                         if variables[((node - 1) * nodes + node_2) - 1] > 0:
                             print(f"Node {node} is on Position {node_2}")
+
     return order_list
