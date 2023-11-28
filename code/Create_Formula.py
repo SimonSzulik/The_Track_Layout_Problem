@@ -7,7 +7,6 @@
  *
  * ************************
 """
-import itertools
 # imports
 from itertools import combinations as combi
 from pysat.formula import CNF
@@ -17,7 +16,7 @@ relational_sequence = [[]]  # ω(v_i,v_j)
 total_sequence = [[]]  # ϕ(v_i,p)
 same_track = [[]]  # ψ(v_i,v_j)
 
-""" Approach 2
+""" 
  * ***** σ-Vars and it's clauses ***** *
  * ***** each node n has t variables ***** *
  * ***** first i variables stand for the node n_i to be on track t_k ***** *
@@ -25,10 +24,8 @@ same_track = [[]]  # ψ(v_i,v_j)
 
 
 def get_node_clauses(nodes, tracks, edges):
+    # variable σ
     global node_track_variable
-
-    # Was ist mit methode 3 ?
-    # Das würde die Variablen Anzahl erhöhen, aber die größte Klauselmenge (Kreuzungen) um einiges verkleiner. 6 vrs pro Klausel -> 4 pro Klausel
 
     node_track_variable = [[0 for _ in range(tracks)] for _ in range(nodes)]
     unique_number = 1
@@ -65,17 +62,22 @@ def get_node_clauses(nodes, tracks, edges):
     return formula
 
 
-"""
- * ***** ω and and its clauses  ***** *
+""" Approach 2 and its improved Version
+ * ***** ω and and its clauses with improvement variable ψ, that shows if n_i and n_j are on the same track ***** *
  * ***** first j variables stand for the node n_i to be left of node n_j ***** *
+ * ***** ψ lets us ignore another for loop and reduce clauses for cross checking ***** *
 """
 
 
-def get_sequence_clauses_relation(nodes, tracks, edges):
+def get_sequence_clauses_relation(nodes, tracks, edges, version):
+    # variables ω and ψ
     global relational_sequence
+    global same_track
 
     relational_sequence = [[0 for _ in range(nodes)] for _ in range(nodes)]
+    same_track = [[0 for _ in range(nodes)] for _ in range(nodes)]
     unique_number = nodes * tracks + 100
+    unique_number_same_track = (nodes * tracks) + (nodes * nodes) + 100
     formula = CNF()
 
     # loop through ω variables and assign unique number
@@ -120,26 +122,51 @@ def get_sequence_clauses_relation(nodes, tracks, edges):
     edge_pairs = get_disjoint_edge_pairs(edges)
     track_pairs = get_track_pairs(tracks)
 
-    for edge_pair in edge_pairs:
-        for track_pair in track_pairs:
-            formula.append([-node_track_variable[edge_pair[0][0]][track_pair[0]],
-                            -node_track_variable[edge_pair[1][0]][track_pair[0]],
-                            -node_track_variable[edge_pair[0][1]][track_pair[1]],
-                            -node_track_variable[edge_pair[1][1]][track_pair[1]],
+    if version == "Improved":
+        # loop through ψ variables and assign unique number
+        for node_1 in range(nodes):
+            for node_2 in range(nodes):
+                same_track[node_1][node_2] = unique_number_same_track
+                unique_number_same_track += 1
+
+        # implication that forces the ψ equivalent variable to be true if 2 nodes are on the same tack
+        for node_1 in range(nodes):
+            for node_2 in range(nodes):
+                for track in range(tracks):
+                    formula.append([-node_track_variable[node_1][track], -node_track_variable[node_2][track],
+                                    same_track[node_1][node_2]])
+        for edge_pair in edge_pairs:
+            formula.append([-same_track[edge_pair[0][0]][edge_pair[1][0]],
+                            -same_track[edge_pair[0][1]][edge_pair[1][1]],
                             -relational_sequence[edge_pair[0][0]][edge_pair[1][0]],
                             -relational_sequence[edge_pair[1][1]][edge_pair[0][1]]])
 
-            formula.append([-node_track_variable[edge_pair[0][0]][track_pair[0]],
-                            -node_track_variable[edge_pair[1][0]][track_pair[0]],
-                            -node_track_variable[edge_pair[0][1]][track_pair[1]],
-                            -node_track_variable[edge_pair[1][1]][track_pair[1]],
+            formula.append([-same_track[edge_pair[0][0]][edge_pair[1][0]],
+                            -same_track[edge_pair[0][1]][edge_pair[1][1]],
                             -relational_sequence[edge_pair[1][0]][edge_pair[0][0]],
                             -relational_sequence[edge_pair[0][1]][edge_pair[1][1]]])
+    else:
+        for edge_pair in edge_pairs:
+            for track_pair in track_pairs:
+                formula.append([-node_track_variable[edge_pair[0][0]][track_pair[0]],
+                                -node_track_variable[edge_pair[1][0]][track_pair[0]],
+                                -node_track_variable[edge_pair[0][1]][track_pair[1]],
+                                -node_track_variable[edge_pair[1][1]][track_pair[1]],
+                                -relational_sequence[edge_pair[0][0]][edge_pair[1][0]],
+                                -relational_sequence[edge_pair[1][1]][edge_pair[0][1]]])
+
+                formula.append([-node_track_variable[edge_pair[0][0]][track_pair[0]],
+                                -node_track_variable[edge_pair[1][0]][track_pair[0]],
+                                -node_track_variable[edge_pair[0][1]][track_pair[1]],
+                                -node_track_variable[edge_pair[1][1]][track_pair[1]],
+                                -relational_sequence[edge_pair[1][0]][edge_pair[0][0]],
+                                -relational_sequence[edge_pair[0][1]][edge_pair[1][1]]])
     return formula
 
 
 """ Approach 2 improved
  * ***** ω and and its clauses with improvement variable ψ, that shows if n_i and n_j are on the same track ***** *
+ * ***** --> lets us ignore another for loop and reduce clauses for cross checking ***** *
  * ***** first j variables stand for the node n_i to be left of node n_j ***** *
 """
 
@@ -157,18 +184,15 @@ def get_sequence_clauses_relation_improved(nodes, tracks, edges):
     # loop through ψ variables and assign unique number
     for node_1 in range(nodes):
         for node_2 in range(nodes):
-            if node_1 < node_2:
-                same_track[node_1][node_2] = unique_number_same_track
-                unique_number_same_track += 1
+            same_track[node_1][node_2] = unique_number_same_track
+            unique_number_same_track += 1
 
     # implication that forces the ψ equivalent variable to be true if 2 nodes are on the same tack
-    print(same_track)
     for node_1 in range(nodes):
         for node_2 in range(nodes):
-            if node_1 < node_2:
-                for track in range(tracks):
-                    formula.append([-node_track_variable[node_1][track], -node_track_variable[node_2][track],
-                                    same_track[node_1][node_2]])
+            for track in range(tracks):
+                formula.append([-node_track_variable[node_1][track], -node_track_variable[node_2][track],
+                                same_track[node_1][node_2]])
 
     # loop through ω variables and assign unique number
     for left_node in range(nodes):
@@ -208,30 +232,24 @@ def get_sequence_clauses_relation_improved(nodes, tracks, edges):
                     formula.append([-relational_sequence[left_node][right_node], node_track_variable[right_node][track],
                                     -node_track_variable[left_node][track]])
 
-    # No Crossings
+    # No Crossings if the start-/end-nodes of the edges are on the same track
     edge_pairs = get_disjoint_edge_pairs(edges)
 
     for edge_pair in edge_pairs:
-        # print(edge_pair)
-        # check if the 4 nodes are not all on the same track
-        # formula.append(-same_track[edge_pair[0][0]][edge_pair[1][1]])
-        # if same_track[edge_pair[0][0]][edge_pair[1][1]]:
-        # fix this shit somehow
-        formula.append([same_track[edge_pair[0][0]][edge_pair[1][1]],
-                        -same_track[edge_pair[0][0]][edge_pair[1][0]],
-                        -same_track[edge_pair[1][0]][edge_pair[1][1]],
+        formula.append([-same_track[edge_pair[0][0]][edge_pair[1][0]],
+                        -same_track[edge_pair[0][1]][edge_pair[1][1]],
                         -relational_sequence[edge_pair[0][0]][edge_pair[1][0]],
                         -relational_sequence[edge_pair[1][1]][edge_pair[0][1]]])
 
-        formula.append([same_track[edge_pair[0][0]][edge_pair[1][1]],
-                        -same_track[edge_pair[0][0]][edge_pair[1][0]],
-                        -same_track[edge_pair[1][0]][edge_pair[1][1]],
+        formula.append([-same_track[edge_pair[0][0]][edge_pair[1][0]],
+                        -same_track[edge_pair[0][1]][edge_pair[1][1]],
                         -relational_sequence[edge_pair[1][0]][edge_pair[0][0]],
                         -relational_sequence[edge_pair[0][1]][edge_pair[1][1]]])
+
     return formula
 
 
-""" Approach 1 (bad and ultra slow)
+""" Approach 1 (bad and slow since its creating a HUGE amount of clauses to check crossings)
  * ***** ϕ and and its clauses  ***** *
  * ***** first i variables stand for the node n being on position p_i ***** *
  * ***** This Approach will not be further elaborated since it seems to be a way worse option ***** *
@@ -305,7 +323,7 @@ def get_disjoint_edge_pairs(edges):
     return disjoint_pairs
 
 
-# help function to get neighbored track pairs
+# help function to get track pairs
 def get_track_pairs(tracks):
     track_numbers = list(range(0, tracks))
     track_pairs = []

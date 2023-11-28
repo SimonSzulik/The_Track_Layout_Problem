@@ -26,7 +26,7 @@ def compute_tlp(nodes, graph, tracks, method):
     """
     formula = get_node_clauses(nodes, tracks, graph)
     if method == 1:
-        formula.extend(get_sequence_clauses_relation_improved(nodes, tracks, graph))
+        formula.extend(get_sequence_clauses_relation(nodes, tracks, graph, "Improved"))
     elif method == 2:
         formula.extend(get_sequence_total_order(nodes, tracks, graph))
     else:
@@ -51,8 +51,6 @@ def compute_tlp(nodes, graph, tracks, method):
      * ***** Print TLP configuration as text ***** *
     """
     track_list = get_position(model, nodes, tracks)
-    # das kann weg
-    # print(track_list)
 
     if track_list:
         print("\n" "The TLP has the following configuration: \n")
@@ -70,6 +68,8 @@ def compute_tlp(nodes, graph, tracks, method):
             print(track, " ---- ")
             track = ""
         return solver.solve()
+    else:
+        return False
 
 
 """

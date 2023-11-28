@@ -16,7 +16,7 @@ from Data_Script import get_dataset
 """
 
 nodes = 4
-tracks = 4
+tracks = 3
 
 # adjacency matrix
 edges = [[0 for _ in range(nodes)] for _ in range(nodes)]
@@ -53,7 +53,7 @@ for filename, matrix in test_graphs.items():
     print(matrix)
     edges = matrix
     print("------")
-    if count == 10:
+    if count == 31:
         break
     count += 1
 
@@ -61,4 +61,8 @@ for filename, matrix in test_graphs.items():
  * ***** Compute ***** *
 """
 
-compute_tlp(len(edges), edges, tracks, 1)
+while not compute_tlp(len(edges), edges, tracks, 1):
+    tracks += 1
+
+
+#compute_tlp(len(edges), edges, tracks, 1)
