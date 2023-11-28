@@ -15,7 +15,7 @@ import networkx as nx
 data_folder_path = '../data'
 
 """
- * ***** Loop through Dataset and find 100 graphs ***** *
+ * ***** loop through dataset and find 100 graphs ***** *
  * 10 with 10 nodes
  * 10 with 20 nodes
  * 10 with 30 nodes

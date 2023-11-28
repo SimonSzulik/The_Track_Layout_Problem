@@ -15,16 +15,17 @@ from CustomSolver import CustomSolver
 from String_Formatter import get_position, get_order
 
 """
- * ***** F(G,t) ***** *
- * n = nodes, g = Graph as adjacency matrix, t = tracks, m = SAT-Method 1/2/3 = Total_Order/Relational_Sequence/Relational_Sequence_Improved ) *
+ * ***** F(G,t) ***** * * n = nodes, g = Graph as adjacency matrix, t = tracks
+ * m = SAT-Method 1/2/3 = Total_Order/Relational_Sequence/Relational_Sequence_Improved 
 """
 
 
 def compute_tlp(nodes, graph, tracks, method):
     """
-     * ***** Collecting all Clauses ***** *
+     * ***** collecting all clauses ***** *
     """
     formula = get_node_clauses(nodes, tracks, graph)
+
     if method == 1:
         formula.extend(get_sequence_total_order(nodes, tracks, graph))
     elif method == 2:
@@ -35,7 +36,7 @@ def compute_tlp(nodes, graph, tracks, method):
         print("wrong method")
 
     """
-     * ***** Compute Sat-Solving-Model if possible ***** *
+     * ***** compute sat-solving-model if possible ***** *
     """
     start = time.time()
 
@@ -50,7 +51,7 @@ def compute_tlp(nodes, graph, tracks, method):
     print("The formula contained", len(formula.clauses), "clauses")
 
     """
-     * ***** Print TLP configuration as text ***** *
+     * ***** print TLP configuration as text ***** *
     """
     track_list = get_position(model, nodes, tracks)
 

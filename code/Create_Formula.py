@@ -62,7 +62,7 @@ def get_node_clauses(nodes, tracks, edges):
     return formula
 
 
-""" Approach 2 and its improved Version
+""" approach 2 and its improved version
  * ***** ω and and its clauses with improvement variable ψ, that shows if n_i and n_j are on the same track ***** *
  * ***** first j variables stand for the node n_i to be left of node n_j ***** *
  * ***** ψ lets us ignore another for loop and reduce clauses for cross checking ***** *
@@ -164,10 +164,10 @@ def get_sequence_clauses_relation(nodes, tracks, edges, version):
     return formula
 
 
-""" Approach 1 (bad and slow since its creating a HUGE amount of clauses to check crossings)
+""" approach 1 (bad and slow since its creating a HUGE amount of clauses to check crossings)
  * ***** ϕ and and its clauses  ***** *
  * ***** first i variables stand for the node n being on position p_i ***** *
- * ***** This Approach will not be further elaborated since it seems to be a way worse option ***** *
+ * ***** This approach will not be further elaborated since it seems to be a way worse option ***** *
 """
 
 
