@@ -164,91 +164,6 @@ def get_sequence_clauses_relation(nodes, tracks, edges, version):
     return formula
 
 
-""" Approach 2 improved
- * ***** ω and and its clauses with improvement variable ψ, that shows if n_i and n_j are on the same track ***** *
- * ***** --> lets us ignore another for loop and reduce clauses for cross checking ***** *
- * ***** first j variables stand for the node n_i to be left of node n_j ***** *
-"""
-
-
-def get_sequence_clauses_relation_improved(nodes, tracks, edges):
-    global relational_sequence
-    global same_track
-
-    relational_sequence = [[0 for _ in range(nodes)] for _ in range(nodes)]
-    same_track = [[0 for _ in range(nodes)] for _ in range(nodes)]
-    unique_number = nodes * tracks + 100
-    unique_number_same_track = (nodes * tracks) + (nodes * nodes) + 100
-    formula = CNF()
-
-    # loop through ψ variables and assign unique number
-    for node_1 in range(nodes):
-        for node_2 in range(nodes):
-            same_track[node_1][node_2] = unique_number_same_track
-            unique_number_same_track += 1
-
-    # implication that forces the ψ equivalent variable to be true if 2 nodes are on the same tack
-    for node_1 in range(nodes):
-        for node_2 in range(nodes):
-            for track in range(tracks):
-                formula.append([-node_track_variable[node_1][track], -node_track_variable[node_2][track],
-                                same_track[node_1][node_2]])
-
-    # loop through ω variables and assign unique number
-    for left_node in range(nodes):
-        for right_node in range(nodes):
-            relational_sequence[left_node][right_node] = unique_number
-            unique_number += 1
-            # append clause to formula that negates i == j case
-            if left_node == right_node:
-                formula.append([-relational_sequence[left_node][right_node]])
-
-    # asymmetric
-    for left_node in range(nodes):
-        for right_node in range(nodes):
-            if left_node < right_node:
-                # when both are on same track
-                for track in range(tracks):
-                    formula.append([-node_track_variable[left_node][track], -node_track_variable[right_node][track],
-                                    relational_sequence[left_node][right_node],
-                                    relational_sequence[right_node][left_node]])
-                formula.append(
-                    [-relational_sequence[left_node][right_node], -relational_sequence[right_node][left_node]])
-
-    # transitivity
-    for left_node in range(nodes):
-        for middle_node in range(nodes):
-            for right_node in range(nodes):
-                if left_node != middle_node and middle_node != right_node and left_node != right_node:
-                    formula.append([-relational_sequence[left_node][middle_node],
-                                    -relational_sequence[middle_node][right_node],
-                                    relational_sequence[left_node][right_node]])
-
-    # Implication to ensure sequenced nodes are on the same track
-    for left_node in range(nodes):
-        for right_node in range(nodes):
-            for track in range(tracks):
-                if left_node != right_node:
-                    formula.append([-relational_sequence[left_node][right_node], node_track_variable[right_node][track],
-                                    -node_track_variable[left_node][track]])
-
-    # No Crossings if the start-/end-nodes of the edges are on the same track
-    edge_pairs = get_disjoint_edge_pairs(edges)
-
-    for edge_pair in edge_pairs:
-        formula.append([-same_track[edge_pair[0][0]][edge_pair[1][0]],
-                        -same_track[edge_pair[0][1]][edge_pair[1][1]],
-                        -relational_sequence[edge_pair[0][0]][edge_pair[1][0]],
-                        -relational_sequence[edge_pair[1][1]][edge_pair[0][1]]])
-
-        formula.append([-same_track[edge_pair[0][0]][edge_pair[1][0]],
-                        -same_track[edge_pair[0][1]][edge_pair[1][1]],
-                        -relational_sequence[edge_pair[1][0]][edge_pair[0][0]],
-                        -relational_sequence[edge_pair[0][1]][edge_pair[1][1]]])
-
-    return formula
-
-
 """ Approach 1 (bad and slow since its creating a HUGE amount of clauses to check crossings)
  * ***** ϕ and and its clauses  ***** *
  * ***** first i variables stand for the node n being on position p_i ***** *
@@ -310,7 +225,7 @@ def get_sequence_total_order(nodes, tracks, edges):
 # help function to all edge pairs to check for crossings
 def get_disjoint_edge_pairs(edges):
     edge_list = [(i, j) for i in range(len(edges)) for j in range(len(edges[i])) if edges[i][j] == 1]
-    print(edge_list)
+    # print(edge_list)
     disjoint_pairs = []
 
     for i in range(len(edge_list)):
