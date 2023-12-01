@@ -19,11 +19,11 @@ def get_dataset(data):
         for line in lines:
             data_set.append(line.strip())
 
-        # Path to dataset
+        # path to dataset
         data_folder_path = '../data'
         test_graphs = {}
 
-        # Loop through dataset
+        # loop through dataset and return the wanted graph data
         for filename in os.listdir(data_folder_path):
             if filename in data_set:
                 file_path = os.path.join(data_folder_path, filename)

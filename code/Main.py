@@ -48,21 +48,39 @@ test_graphs = get_dataset('../Data_Sets/Data_Set_10*n_Nodes.txt')
 * compute single graphs or own examples
 """
 
-for filename, matrix in test_graphs.items():
-    if filename == "grafo327.10.gml":
-        print(f"File: {filename}")
-        print("adjacency matrix:")
-        print(matrix)
-        edges = matrix
-        print("------")
-        # compute_tlp(len(edges), edges, tracks, 2)
+#for filename, matrix in test_graphs.items():
+#    if filename == "grafo327.10.gml":
+#        print(f"File: {filename}")
+#        print("adjacency matrix:")
+#        print(matrix)
+#        edges = matrix
+#        print("------")
+#        compute_tlp(len(edges), edges, tracks, 2)
 
 """
  * ***** compute whole dataset ***** *
  * ***** !!! TO DO !!! ***** *
 """
 
-while not compute_tlp(len(edges), edges, tracks, 3):
-    tracks += 1
+for filename, matrix in test_graphs.items():
+    # if name contains anzahl knoten
+    # --> in file schreiben
+    print(f"File: {filename}")
+    print("adjacency matrix:")
+    print(matrix)
+    print("------")
+    edges = matrix
+
+    track_counter = 1
+
+    while not compute_tlp(len(edges), edges, track_counter, 3):
+        track_counter += 1
+
+    print(track_counter)
+
+
+
+#while not compute_tlp(len(edges), edges, tracks, 2):
+#    tracks += 1
 
 

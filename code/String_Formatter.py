@@ -15,7 +15,7 @@ def get_position(variables, nodes, tracks):
         track_list[t] = []
     if not variables:
         print("No Solution found for", tracks, "tracks")
-        print("\n")
+        #print("\n")
         return
     for node in range(1, nodes + 1):
         for track in range(1, tracks + 1):
