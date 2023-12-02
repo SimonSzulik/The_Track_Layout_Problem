@@ -50,7 +50,7 @@ test_graphs = get_dataset('../Data_Sets/Data_Set_10*n_Nodes.txt')
 * compute single graphs or own examples
 """
 
-#for filename, matrix in test_graphs.items():
+# for filename, matrix in test_graphs.items():
 #    if filename == "grafo327.10.gml":
 #        print(f"File: {filename}")
 #        print("adjacency matrix:")
@@ -65,44 +65,28 @@ test_graphs = get_dataset('../Data_Sets/Data_Set_10*n_Nodes.txt')
 """
 
 for filename, matrix in test_graphs.items():
-    # if name contains anzahl knoten
-    # --> in file schreiben
-    graph_class = filename.split('.')[1]
-    path = '../results/' + graph_class + ".txt"
-    track_counter = 1
+    if "grafo4865.80.gml" not in filename and "20.gml" in filename:
 
-    print(matrix)
+        graph_class = filename.split('.')[1]
+        path = '../results/' + graph_class + ".txt"
+        track_counter = 1
+        original_stdout = sys.stdout
 
-    with open(path, 'w') as f:
-        f.write(f"File: {filename}")
-        f.write("\n")
-        f.write("------------")
-        f.write("\n")
-        edges = matrix
+        print(filename, "is getting tested now")
 
-        sys.stdout = f
+        with open(path, 'a') as f:
+            edges = matrix
+            f.write(f"File: {filename} with {len(edges)} Nodes and {np.sum(matrix)/2} Edges")
+            f.write("\n")
+            f.write("------------")
+            f.write("\n")
 
-        while not compute_tlp(len(edges), edges, track_counter, 2):
-            track_counter += 1
+            sys.stdout = f
 
-        f.write("------------------------")
-        f.write("\n")
+            while not compute_tlp(len(edges), edges, track_counter, 2):
+                track_counter += 1
 
-
-#    print(f"File: {filename}")
-#    print("adjacency matrix:")
-#    print(matrix)
-#    print("------")
-#    edges = matrix
-#
-#    track_counter = 1
-#
-#    while not compute_tlp(len(edges), edges, track_counter, 2):
-#        track_counter += 1
-
-
-
-#while not compute_tlp(len(edges), edges, tracks, 2):
-#    tracks += 1
-
-
+            f.write("\n")
+            f.write("------------------------")
+            f.write("\n")
+            sys.stdout = original_stdout

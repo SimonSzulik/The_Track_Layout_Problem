@@ -10,6 +10,7 @@
 
 # imports
 import time
+import numpy as np
 from Create_Formula import get_node_clauses, get_sequence_clauses_relation, get_sequence_total_order
 from CustomSolver import CustomSolver
 from String_Formatter import get_position, get_order
@@ -26,6 +27,8 @@ def compute_tlp(nodes, graph, tracks, method):
     """
     formula = get_node_clauses(nodes, tracks, graph)
 
+    start = time.time()
+
     if method == 1:
         formula.extend(get_sequence_total_order(nodes, tracks, graph))
     elif method == 2:
@@ -35,20 +38,25 @@ def compute_tlp(nodes, graph, tracks, method):
     else:
         print("wrong method")
 
+    end = time.time()
+    print(len(formula.clauses), "Clauses were created in", end - start, "seconds.")
+
     """
      * ***** compute sat-solving-model if possible ***** *
     """
-    start = time.time()
 
     solver = CustomSolver()
     solver.add(formula)
+
+    start = time.time()
+
     model = solver.get_model() if solver.solve() else []
 
     end = time.time()
 
-    print("The Sat-Formula", model)
-    print("calculated to", solver.evaluate_formula(model), "in", end - start, "seconds.")
-    print("The formula contained", len(formula.clauses), "clauses")
+    if model:
+        print("The Sat-Formula", model)
+        print("calculated to", solver.evaluate_formula(model), "in", end - start, "seconds.")
 
     """
      * ***** print TLP configuration as text ***** *

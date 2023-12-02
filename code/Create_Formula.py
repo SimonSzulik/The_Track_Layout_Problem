@@ -130,6 +130,7 @@ def get_sequence_clauses_relation(nodes, tracks, edges, version):
                 unique_number_same_track += 1
 
         # implication that forces the ψ equivalent variable to be true if 2 nodes are on the same tack
+        # keine implikation sondern eine äquivalenz !! noch im code anpassen!!
         for node_1 in range(nodes):
             for node_2 in range(nodes):
                 for track in range(tracks):
