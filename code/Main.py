@@ -10,6 +10,8 @@
 
 from Sat_Solving_TLP import compute_tlp
 from Data_Script import get_dataset
+import numpy as np
+import sys
 
 """
  * ***** space for own example graphs ***** *
@@ -65,18 +67,38 @@ test_graphs = get_dataset('../Data_Sets/Data_Set_10*n_Nodes.txt')
 for filename, matrix in test_graphs.items():
     # if name contains anzahl knoten
     # --> in file schreiben
-    print(f"File: {filename}")
-    print("adjacency matrix:")
-    print(matrix)
-    print("------")
-    edges = matrix
-
+    graph_class = filename.split('.')[1]
+    path = '../results/' + graph_class + ".txt"
     track_counter = 1
 
-    while not compute_tlp(len(edges), edges, track_counter, 3):
-        track_counter += 1
+    print(matrix)
 
-    print(track_counter)
+    with open(path, 'w') as f:
+        f.write(f"File: {filename}")
+        f.write("\n")
+        f.write("------------")
+        f.write("\n")
+        edges = matrix
+
+        sys.stdout = f
+
+        while not compute_tlp(len(edges), edges, track_counter, 2):
+            track_counter += 1
+
+        f.write("------------------------")
+        f.write("\n")
+
+
+#    print(f"File: {filename}")
+#    print("adjacency matrix:")
+#    print(matrix)
+#    print("------")
+#    edges = matrix
+#
+#    track_counter = 1
+#
+#    while not compute_tlp(len(edges), edges, track_counter, 2):
+#        track_counter += 1
 
 
 
