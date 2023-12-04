@@ -17,27 +17,27 @@ import sys
  * ***** space for own example graphs ***** *
 """
 
-nodes = 4
-tracks = 3
+# nodes = 5
+# tracks = 5
 
 # adjacency matrix
-edges = [[0 for _ in range(nodes)] for _ in range(nodes)]
+# edges = [[0 for _ in range(nodes)] for _ in range(nodes)]
 
 # complete graph
-for i in range(nodes - 1):
-    for j in range(i + 1, nodes):
-        edges[i][j] = 0
+# for i in range(nodes - 1):
+#    for j in range(i + 1, nodes):
+#        edges[i][j] = 1
 
 # Edges for Test Graphs
 
-edges[0][1] = 1
-edges[1][0] = 1
+# edges[0][1] = 1
+# edges[1][0] = 1
 
-edges[1][2] = 1
-edges[2][1] = 1
+# edges[1][2] = 1
+# edges[2][1] = 1
 
-edges[2][3] = 1
-edges[3][2] = 1
+# edges[2][3] = 1
+# edges[3][2] = 1
 
 """
  * ***** dataset to analyze ***** *
@@ -65,11 +65,11 @@ test_graphs = get_dataset('../Data_Sets/Data_Set_10n_Nodes.txt')
 """
 
 for filename, matrix in test_graphs.items():
-    if "20.gml" in filename:
+    if "80.gml" in filename:
 
         graph_class = filename.split('.')[1]
         path = '../results/' + graph_class + ".txt"
-        track_counter = 1
+        track_counter = 4
         original_stdout = sys.stdout
 
         print(filename, "is getting tested now")
@@ -83,7 +83,7 @@ for filename, matrix in test_graphs.items():
 
             sys.stdout = f
 
-            while not compute_tlp(len(edges), edges, track_counter, 2):
+            while not compute_tlp(len(edges), edges, track_counter, 3):
                 track_counter += 1
 
             f.write("\n")

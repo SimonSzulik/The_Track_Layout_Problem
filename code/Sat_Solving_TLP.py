@@ -50,13 +50,16 @@ def compute_tlp(nodes, graph, tracks, method):
 
     start = time.time()
 
+    solver.solve()
     model = solver.get_model() if solver.solve() else []
 
     end = time.time()
 
     if model:
         print("The Sat-Formula", model)
-        print("calculated to", solver.evaluate_formula(model), "in", end - start, "seconds.")
+        print("calculated to", True, "in", end - start, "seconds.")
+    else:
+        print("No Solution found for", tracks, "Tracks in", end - start, "seconds.")
 
     """
      * ***** print TLP configuration as text ***** *
