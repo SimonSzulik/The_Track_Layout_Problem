@@ -43,7 +43,7 @@ edges[3][2] = 1
  * ***** dataset to analyze ***** *
 """
 
-test_graphs = get_dataset('../Data_Sets/Data_Set_10*n_Nodes.txt')
+test_graphs = get_dataset('../Data_Sets/Data_Set_10n_Nodes.txt')
 
 """
 * get single graphs from dataset to analyze
