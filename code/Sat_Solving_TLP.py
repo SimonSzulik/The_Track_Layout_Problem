@@ -49,10 +49,7 @@ def compute_tlp(nodes, graph, tracks, method):
     solver.add(formula)
 
     start = time.time()
-
-    solver.solve()
     model = solver.get_model() if solver.solve() else []
-
     end = time.time()
 
     if model:

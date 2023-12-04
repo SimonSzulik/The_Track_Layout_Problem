@@ -69,8 +69,8 @@ for filename, matrix in test_graphs.items():
 
         graph_class = filename.split('.')[1]
         path = '../results/' + graph_class + ".txt"
-        track_counter = 4
-        original_stdout = sys.stdout
+        track_counter = 1
+        # original_stdout = sys.stdout
 
         print(filename, "is getting tested now")
 
@@ -81,12 +81,12 @@ for filename, matrix in test_graphs.items():
             f.write("------------")
             f.write("\n")
 
-            sys.stdout = f
+            # sys.stdout = f
 
-            while not compute_tlp(len(edges), edges, track_counter, 3):
+            while not compute_tlp(len(edges), edges, track_counter, 2):
                 track_counter += 1
 
             f.write("\n")
             f.write("------------------------")
             f.write("\n")
-            sys.stdout = original_stdout
+            # sys.stdout = original_stdout
