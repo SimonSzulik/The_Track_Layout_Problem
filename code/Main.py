@@ -65,7 +65,7 @@ test_graphs = get_dataset('../Data_Sets/Data_Set_10n_Nodes.txt')
 """
 
 for filename, matrix in test_graphs.items():
-    if "80.gml" in filename:
+    if "10.gml" in filename and not "grafo4865.80.gml" in filename:
 
         graph_class = filename.split('.')[1]
         path = '../results/' + graph_class + ".txt"
@@ -83,7 +83,7 @@ for filename, matrix in test_graphs.items():
 
             # sys.stdout = f
 
-            while not compute_tlp(len(edges), edges, track_counter, 2):
+            while not compute_tlp(len(edges), edges, track_counter, 3):
                 track_counter += 1
 
             f.write("\n")

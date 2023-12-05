@@ -129,13 +129,13 @@ def get_sequence_clauses_relation(nodes, tracks, edges, version):
                 same_track[node_1][node_2] = unique_number_same_track
                 unique_number_same_track += 1
 
-        # implication that forces the ψ equivalent variable to be true if 2 nodes are on the same tack
-        # keine implikation sondern eine äquivalenz !! noch im code anpassen!!
         for node_1 in range(nodes):
             for node_2 in range(nodes):
-                for track in range(tracks):
-                    formula.append([-node_track_variable[node_1][track], -node_track_variable[node_2][track],
-                                    same_track[node_1][node_2]])
+                if node_1 < node_2:
+                    for track in range(tracks):
+                        formula.append([-node_track_variable[node_1][track], -node_track_variable[node_2][track],
+                                        same_track[node_1][node_2]])
+
         for edge_pair in edge_pairs:
             formula.append([-same_track[edge_pair[0][0]][edge_pair[1][0]],
                             -same_track[edge_pair[0][1]][edge_pair[1][1]],
@@ -226,7 +226,6 @@ def get_sequence_total_order(nodes, tracks, edges):
 # help function to all edge pairs to check for crossings
 def get_disjoint_edge_pairs(edges):
     edge_list = [(i, j) for i in range(len(edges)) for j in range(len(edges[i])) if edges[i][j] == 1]
-    # print(edge_list)
     disjoint_pairs = []
 
     for i in range(len(edge_list)):
@@ -235,7 +234,6 @@ def get_disjoint_edge_pairs(edges):
             edge_2 = edge_list[j]
             if set(edge_1).isdisjoint(set(edge_2)):
                 disjoint_pairs.append((edge_1, edge_2))
-
     return disjoint_pairs
 
 
