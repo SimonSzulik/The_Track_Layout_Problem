@@ -135,17 +135,18 @@ def get_sequence_clauses_relation(nodes, tracks, edges, version):
                     for track in range(tracks):
                         formula.append([-node_track_variable[node_1][track], -node_track_variable[node_2][track],
                                         same_track[node_1][node_2]])
-                        formula.append([-same_track[node_1][node_2], node_track_variable[node_1][track]])
-                        formula.append([-same_track[node_1][node_2], node_track_variable[node_2][track]])
+                       # formula.append([same_track[node_1][node_2], -same_track[node_2][node_1]])
+                        #formula.append([-same_track[node_1][node_2], same_track[node_2][node_1]])
 
         for edge_pair in edge_pairs:
-            formula.append([-same_track[edge_pair[0][0]][edge_pair[1][0]],
-                            -same_track[edge_pair[0][1]][edge_pair[1][1]],
+            formula.append([-same_track[min(edge_pair[0][0], edge_pair[1][0])][max(edge_pair[0][0], edge_pair[1][0])],
+                           -same_track[min(edge_pair[0][1], edge_pair[1][1])][max(edge_pair[0][1], edge_pair[1][1])],
+                          #  -same_track[edge_pair[0][1]][edge_pair[1][1]],
                             -relational_sequence[edge_pair[0][0]][edge_pair[1][0]],
                             -relational_sequence[edge_pair[1][1]][edge_pair[0][1]]])
 
-            formula.append([-same_track[edge_pair[0][0]][edge_pair[1][0]],
-                            -same_track[edge_pair[0][1]][edge_pair[1][1]],
+            formula.append([-same_track[min(edge_pair[0][0], edge_pair[1][0])][max(edge_pair[0][0], edge_pair[1][0])],
+                            -same_track[min(edge_pair[0][1], edge_pair[1][1])][max(edge_pair[0][1], edge_pair[1][1])],
                             -relational_sequence[edge_pair[1][0]][edge_pair[0][0]],
                             -relational_sequence[edge_pair[0][1]][edge_pair[1][1]]])
     else:
@@ -229,8 +230,6 @@ def get_sequence_total_order(nodes, tracks, edges):
 def get_disjoint_edge_pairs(edges):
     edge_list = [(i, j) for i in range(len(edges)) for j in range(len(edges[i])) if edges[i][j] == 1]
     disjoint_pairs = []
-
-    print(edge_list)
 
     for i in range(len(edge_list)):
         for j in range(i + 1, len(edge_list)):
