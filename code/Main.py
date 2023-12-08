@@ -65,7 +65,13 @@ test_graphs = get_dataset('../Data_Sets/Data_Set_10n_Nodes.txt')
 """
 
 for filename, matrix in test_graphs.items():
-    if "10.gml" in filename:
+    if "80.gml" in filename and "grafo4865.80.gml" not in filename and "grafo9795.80.gml" not in filename and "grafo7907.80.gml" not in filename and "grafo4568.80.gml" not in filename and "grafo7908.80.gml" not in filename:
+        # Problematic graphs, try again in solo sesssion with max 12 hours
+        # grafo4865.80.gml
+        # grafo9795.80.gml
+        # grafo7907.80.gml
+        # grafo4568.80.gml
+        # grafo7908.80.gml
         graph_class = filename.split('.')[1]
         path = '../results/' + graph_class + "_" + "2" + ".txt"
         track_counter = 1
