@@ -65,9 +65,9 @@ test_graphs = get_dataset('../Data_Sets/Data_Set_10n_Nodes.txt')
 """
 
 for filename, matrix in test_graphs.items():
-    if "10.gml" in filename: #and "grafo4865.80.gml" in filename:
+    if "10.gml" in filename:
         graph_class = filename.split('.')[1]
-        path = '../results/' + graph_class + "_" + 2 + ".txt"
+        path = '../results/' + graph_class + "_" + "2" + ".txt"
         track_counter = 1
         original_stdout = sys.stdout
 

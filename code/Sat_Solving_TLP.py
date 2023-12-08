@@ -10,7 +10,6 @@
 
 # imports
 import time
-import numpy as np
 from Create_Formula import get_node_clauses, get_sequence_clauses_relation, get_sequence_total_order
 from CustomSolver import CustomSolver
 from String_Formatter import get_position, get_order
