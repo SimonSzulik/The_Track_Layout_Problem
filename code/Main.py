@@ -65,12 +65,11 @@ test_graphs = get_dataset('../Data_Sets/Data_Set_10n_Nodes.txt')
 """
 
 for filename, matrix in test_graphs.items():
-    if "80.gml" in filename: #and "grafo4865.80.gml" in filename:
-
+    if "10.gml" in filename: #and "grafo4865.80.gml" in filename:
         graph_class = filename.split('.')[1]
-        path = '../results/' + graph_class + ".txt"
+        path = '../results/' + graph_class + "_" + 2 + ".txt"
         track_counter = 1
-        # original_stdout = sys.stdout
+        original_stdout = sys.stdout
 
         print(filename, "is getting tested now")
 
@@ -81,12 +80,12 @@ for filename, matrix in test_graphs.items():
             f.write("------------")
             f.write("\n")
 
-            # sys.stdout = f
+            sys.stdout = f
 
-            while not compute_tlp(len(edges), edges, track_counter, 3):
+            while not compute_tlp(len(edges), edges, track_counter, 2):
                 track_counter += 1
 
             f.write("\n")
             f.write("------------------------")
             f.write("\n")
-            # sys.stdout = original_stdout
+            sys.stdout = original_stdout

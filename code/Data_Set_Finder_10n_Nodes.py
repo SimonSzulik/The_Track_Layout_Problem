@@ -41,5 +41,5 @@ with open('../Data_Sets/Data_Set_10n_Nodes.txt', 'w') as f:
                     f.write(filename)
                     f.write("\n")
                     counter += 1
-                if counter == 10:
+                if counter == 20:
                     break
