@@ -1,6 +1,6 @@
 """
  * ************************
- *	Bachelor-Thesis Simon Szulik
+ *	Bachelor-Thesis Simon Szulik WS 2023/24
  *
  *      The Track Layout Problem
  *      from a SAT-Solving Perspective
@@ -15,8 +15,9 @@ from CustomSolver import CustomSolver
 from String_Formatter import get_position, get_order
 
 """
- * ***** F(G,t) ***** * * n = nodes, g = Graph as adjacency matrix, t = tracks
- * m = SAT-Method 1/2/3 = Total_Order/Relational_Sequence/Relational_Sequence_Improved 
+ * *****                                       F(G,t)                                        ***** *
+ * *****                n = nodes, g = Graph as adjacency matrix, t = tracks                 ***** *
+ * ***** m = SAT-Method 1/2/3 = Total_Order/Relational_Sequence/Relational_Sequence_Improved ***** *
 """
 
 
@@ -25,7 +26,6 @@ def compute_tlp(nodes, graph, tracks, method):
      * ***** collecting all clauses ***** *
     """
     formula = get_node_clauses(nodes, tracks, graph)
-
     start = time.time()
 
     if method == 1:
@@ -78,6 +78,7 @@ def compute_tlp(nodes, graph, tracks, method):
             print(track, " ---- ")
             track = ""
         return solver.solve()
+    # ignore if no configuration
     else:
         print("\n")
         return False

@@ -1,11 +1,15 @@
 """
  * ************************
- *	Bachelor-Thesis Simon Szulik
+ *	Bachelor-Thesis Simon Szulik WS 2023/24
  *
  *      The Track Layout Problem
  *      from a SAT-Solving Perspective
  *
  * ************************
+"""
+
+"""
+ * ***** help method to print out track-layout-configuration ***** *
 """
 
 

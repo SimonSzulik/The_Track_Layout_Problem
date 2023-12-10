@@ -1,6 +1,6 @@
 """
  * ************************
- *	Bachelor-Thesis Simon Szulik
+ *	Bachelor-Thesis Simon Szulik WS 2023/24
  *
  *      The Track Layout Problem
  *      from a SAT-Solving Perspective
@@ -14,7 +14,7 @@ import numpy as np
 import sys
 
 """
- * ***** space for own example graphs ***** *
+ * ***** space for own example graphs and its computation ***** *
 """
 
 # nodes = 5
@@ -39,6 +39,8 @@ import sys
 # edges[2][3] = 1
 # edges[3][2] = 1
 
+# compute_tlp(len(edges), edges, tracks, 2)
+
 """
  * ***** dataset to analyze ***** *
 """
@@ -46,32 +48,25 @@ import sys
 test_graphs = get_dataset('../Data_Sets/Data_Set_10n_Nodes.txt')
 
 """
-* get single graphs from dataset to analyze
-* compute single graphs or own examples
-"""
-
-# for filename, matrix in test_graphs.items():
-#    if filename == "grafo327.10.gml":
-#        print(f"File: {filename}")
-#        print("adjacency matrix:")
-#        print(matrix)
-#        edges = matrix
-#        print("------")
-#        compute_tlp(len(edges), edges, tracks, 2)
-
-"""
- * ***** compute whole dataset ***** *
- * ***** !!! TO DO !!! ***** *
+ * ***** compute whole dataset (small part of rome_gml ***** *
 """
 
 for filename, matrix in test_graphs.items():
-    if "80.gml" in filename and "grafo4865.80.gml" not in filename and "grafo9795.80.gml" not in filename and "grafo7907.80.gml" not in filename and "grafo4568.80.gml" not in filename and "grafo7908.80.gml" not in filename:
-        # Problematic graphs, try again in solo sesssion with max 12 hours
+    if ("80.gml" in filename and "grafo4865.80.gml" not in filename
+            and "grafo9795.80.gml" not in filename
+            and "grafo7907.80.gml" not in filename
+            and "grafo4568.80.gml" not in filename
+            and "grafo7908.80.gml" not in filename
+            and "grafo9747.80.gml" not in filename
+            and "grafo9490.80.gml" not in filename):
+        # check graphs for 80 nodes if they run longer than 12 hours
         # grafo4865.80.gml
         # grafo9795.80.gml
         # grafo7907.80.gml
         # grafo4568.80.gml
         # grafo7908.80.gml
+        # grafo9747.80.gml
+        # grafo9490.80.gml
         graph_class = filename.split('.')[1]
         path = '../results/' + graph_class + "_" + "2" + ".txt"
         track_counter = 1

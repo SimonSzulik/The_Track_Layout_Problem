@@ -1,6 +1,6 @@
 """
  * ************************
- *	Bachelor-Thesis Simon Szulik
+ *	Bachelor-Thesis Simon Szulik WS 2023/24
  *
  *      The Track Layout Problem
  *      from a SAT-Solving Perspective
@@ -11,17 +11,20 @@
 import os
 import networkx as nx
 
+"""
+ * ***** loop through dataset and find 200 graphs ***** *
+ * 20 with 10 nodes
+ * 20 with 20 nodes
+ * 20 with 30 nodes
+ * ...
+ * ...
+ * ...
+ * 20 with 100 nodes
+"""
+
 # Path to dataset
 data_folder_path = '../data'
 
-"""
- * ***** loop through dataset and find 100 graphs ***** *
- * 10 with 10 nodes
- * 10 with 20 nodes
- * 10 with 30 nodes
- * ...
- * ...
-"""
 with open('../Data_Sets/Data_Set_10n_Nodes.txt', 'w') as f:
     for factor in range(1, 11):
         counter = 0

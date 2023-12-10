@@ -1,6 +1,6 @@
 """
  * ************************
- *	Bachelor-Thesis Simon Szulik
+ *	Bachelor-Thesis Simon Szulik WS 2023/24
  *
  *      The Track Layout Problem
  *      from a SAT-Solving Perspective
@@ -9,6 +9,11 @@
 """
 
 from pysat.solvers import Lingeling
+
+"""
+ * ***** custom solver to prevent adding non used variables ***** *
+ * *****               mainly for readability               ***** *
+"""
 
 
 class CustomSolver:
@@ -44,8 +49,3 @@ class CustomSolver:
         internal_model = self.solver.get_model()
         return [self.reverse_map[abs(var)] * (1 if var > 0 else -1) for var in internal_model]
 
-    def evaluate_formula(self, model):
-        for clause in self.clauses:
-            if not any(var in model for var in clause):
-                return False
-        return True

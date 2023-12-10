@@ -1,6 +1,6 @@
 """
  * ************************
- *	Bachelor-Thesis Simon Szulik
+ *	Bachelor-Thesis Simon Szulik WS 2023/24
  *
  *      The Track Layout Problem
  *      from a SAT-Solving Perspective
@@ -11,15 +11,16 @@
 from itertools import combinations as combi
 from pysat.formula import CNF
 
+# variables of the SAT-Formulations
 node_track_variable = [[]]  # σ(v_i,t_k)
 relational_sequence = [[]]  # ω(v_i,v_j)
 total_sequence = [[]]  # ϕ(v_i,p)
 same_track = [[]]  # ψ(v_i,v_j)
 
 """ 
- * ***** σ-Vars and it's clauses ***** *
- * ***** each node n has t variables ***** *
+ * ***** σ-Vars and it's clauses, where every node n has t variables ***** *
  * ***** first i variables stand for the node n_i to be on track t_k ***** *
+ * *****            σ[2][3] ==> n_2 is on track t_3, etc.            ***** *
 """
 
 
@@ -64,8 +65,7 @@ def get_node_clauses(nodes, tracks, edges):
 
 """ approach 2 and its improved version
  * ***** ω and and its clauses with improvement variable ψ, that shows if n_i and n_j are on the same track ***** *
- * ***** first j variables stand for the node n_i to be left of node n_j ***** *
- * ***** ψ lets us ignore another for loop and reduce clauses for cross checking ***** *
+ * *****           first j variables of ω[n_i][n_j] stand for the node n_i to be left of node n_j           ***** *
 """
 
 
@@ -165,10 +165,9 @@ def get_sequence_clauses_relation(nodes, tracks, edges, version):
     return formula
 
 
-""" approach 1 (bad and slow since its creating a HUGE amount of clauses to check crossings)
- * ***** ϕ and and its clauses  ***** *
- * ***** first i variables stand for the node n being on position p_i ***** *
- * ***** This approach will not be further elaborated since it seems to be a way worse option ***** *
+""" approach 1 (bad and slow since its creating a HUGE amount of clauses to check crossings, and extra clauses needed)
+ * ***** ϕ and and its clauses, where the first i variables stand for the node n being on position p_i ***** *
+ * *****     This approach will not be further elaborated since it seems to be a way worse option      ***** *
 """
 
 

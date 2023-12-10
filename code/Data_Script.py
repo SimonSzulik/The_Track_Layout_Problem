@@ -1,6 +1,6 @@
 """
  * ************************
- *	Bachelor-Thesis Simon Szulik
+ *	Bachelor-Thesis Simon Szulik WS 2023/24
  *
  *      The Track Layout Problem
  *      from a SAT-Solving Perspective
@@ -10,6 +10,10 @@
 
 import os
 import networkx as nx
+
+"""
+ * ***** function to load smaller dataset from rome_gml ***** *
+"""
 
 
 def get_dataset(data):
