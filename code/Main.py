@@ -52,23 +52,23 @@ test_graphs = get_dataset('../Data_Sets/Data_Set_10n_Nodes.txt')
 """
 
 for filename, matrix in test_graphs.items():
-    if ("80.gml" in filename and "grafo4865.80.gml" not in filename
-            and "grafo9795.80.gml" not in filename
-            and "grafo7907.80.gml" not in filename
-            and "grafo4568.80.gml" not in filename
-            and "grafo7908.80.gml" not in filename
-            and "grafo9747.80.gml" not in filename
-            and "grafo9490.80.gml" not in filename):
-        # check graphs for 80 nodes if they run longer than 12 hours
+    method = "2"
+    if "toDO" in filename:
+        # graphen die länger dauern könnten, einzeln testen
+        # check graphs for 80 nodes if they run longer than 12 hours and method 2
         # grafo4865.80.gml
         # grafo9795.80.gml
         # grafo7907.80.gml
-        # grafo4568.80.gml
-        # grafo7908.80.gml
-        # grafo9747.80.gml
-        # grafo9490.80.gml
+        # check graphs for 90 nodes if they run longer than 12 hours and method 2
+        # grafo7130.90.gml
+        # grafo8558.90.gml
+        # grafo8952.90.gml
+        # grafo8946.90.gml
+        # grafo3756.90.gml
+        # check graphs for 10 nodes if they run longer than 12 hours and method 2
+
         graph_class = filename.split('.')[1]
-        path = '../results/' + graph_class + "_" + "2" + ".txt"
+        path = '../results/' + graph_class + "_" + method + ".txt"
         track_counter = 1
         original_stdout = sys.stdout
 

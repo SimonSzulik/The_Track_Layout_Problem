@@ -13,13 +13,13 @@ import networkx as nx
 
 """
  * ***** loop through dataset and find 200 graphs ***** *
- * 20 with 10 nodes
- * 20 with 20 nodes
- * 20 with 30 nodes
+ * 10 with 10 nodes
+ * 10 with 20 nodes
+ * 10 with 30 nodes
  * ...
  * ...
  * ...
- * 20 with 100 nodes
+ * 10 with 100 nodes
 """
 
 # Path to dataset
@@ -44,5 +44,5 @@ with open('../Data_Sets/Data_Set_10n_Nodes.txt', 'w') as f:
                     f.write(filename)
                     f.write("\n")
                     counter += 1
-                if counter == 20:
+                if counter == 10:
                     break
