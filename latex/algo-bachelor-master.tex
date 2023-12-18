@@ -1,4 +1,4 @@
-\documentclass[bachelor,german]{algothesis}
+\documentclass[bachelor, english]{algothesis}
 % possible types: bachelor, master, zula (seminar, practical)
 % Für Seminararbeiten und Praktikumsberichte die Vorlage my-seminar-praktikum.tex verwenden!
 % possible languages: english, german
@@ -6,289 +6,345 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
-
+\usepackage{caption}
+\usepackage{algpseudocode}
+\captionsetup[figure]{name=Fig.}
+\addto\captionsngerman{
+    % Second argument is singular, third is plural
+    \crefname{figure}{figure}{figure}
+    \Crefname{figure}{Figure}{Figure}
+}
 \graphicspath{{figures/}}
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%% Bitte nur ab hier Änderungen vornehmen %%%%%%%%%%%%%%%%%%%%%
 
-\title{Titel der Arbeit} % Geben Sie hier den Titel Ihrer Arbeit an.
+\title{The Track Layout Problem from a SAT-Solving Perspective} % Geben Sie hier den Titel Ihrer Arbeit an.
 
-\author{Maxi Musterle} % Geben Sie Ihren Namen an.
+\author{Simon Szulik} % Geben Sie Ihren Namen an.
 
-\newcommand{\abgabedatum}{TT. Monat 20YY} % Hier wird das Abgabedatum angepasst
+\newcommand{\abgabedatum}{29. February 2024} % Hier wird das Abgabedatum angepasst
 
 \supervisors{% Geben Sie die Namen aller Betreuenden an, getrennt durch das Makro '\and'
 Jun.-Prof.\ Dr.\ Philipp Kindermann \and
-Dr.\ Be TreuerInZwei \and
-Be TreuerInDrei, M.\,Sc.
-} 
+Prof.\ Dr.\ Stefan Näher}
 
 
 \begin{document}
 
 \begin{abstract}
-	Bachelor- und Masterarbeiten bedürfen einer Zusammenfassung.
+	Bachelor- und Masterarbeiten bedürfen einer Zusammenfassung english
 \end{abstract}
 
-%\begin{germanabstract}
-	% If you write in English, but also want to write a German summary, use this command.
-%\end{germanabstract}
-
+\begin{germanabstract}
+	Bachelor- und Masterarbeiten bedürfen einer Zusammenfassung deutsch
+\end{germanabstract}
 
 \thesistableofcontents
 
-
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\chapter{Einleitung}
-Abschlussarbeiten in der Algorithmik sollen in dieser \LaTeX{}-Vorlage erstellt werden.
-Dazu stellt die DocumentClass (erste Zeile) Parameter für die verschiedenen Arbeitsformen
-(\verb+bachelor, master, zula+) 
-zur Verfügung.
-Für Seminararbeiten und Praktikumsberichte sollte stattdessen die Vorlage (\verb+algo-seminar-praktikum.tex+) verwendet werden.
+\chapter{Introduction}
 
-The localization of table of content, PDF bookmarks and such can be changed documentwide using the \verb+english+ parameter.
+\section{Background and Motivation}
 
+\section{Objectives and Structure of the Study}
+This thesis deals with SAT formulations of the track layout problem. More specifically, the aim of this work is to find the most efficient formulation for solving the problem. To achieve this, we chose a SAT interpretation. In this method, the problem is precisely defined by means of clauses and variables, and the solution is expressed as a configuration of these variables. In an attempt to minimize the number of clauses and thereby optimize the solution approach, we will ultimately compare two different SAT formulations to identify if one of them is the clearly better. In the following sections, we will try to acquire an idea of our situation by using a brief introduction to graphs, visualization and similar layouts while comparing them using examples. Following an introduction to the world of sat solving, an entire chapter is devoted to the primary component of this study, the formulation of our problem as a sat formula, which includes different methods and approaches. The next two sections deal with the implementation and testing of the previously stated algorithms, as well as the evaluation of the elaborated results of the Study.
 
-\section{Git}
-Falls nicht schon erledigt, sollte auf dem \href{https://gitlab.uni-trier.de/}{Uni Trier GitLab} ein Repository mit dem Namen des Abschlussarbeitstypes sowie Ihrem Namen (also z.B.\ ``bachelorthesis-maxi-musterle'') angelegt werden. Der Ordner Ihrer Abschlussarbeit sowie eventuell Code und Daten sollten dort abgelegt und (spätestens zu Treffen) auf dem Laufenden sein. 
-Dieser Vorlage liegt außerdem eine Datei namens \verb+.gitignore+ bei, welche \texttt{git} davon abhält \LaTeX{}-Hilfsdateien mit ins Repository zu schieben. 
-Sollten Sie weitere Dateien im Repositoryordner ablegen, welche nicht für alle gedacht sind und daher nicht hochgeladen werden sollten, können sie die Dateinamen oder Ordner dort hinzufügen. 
+\chapter{Fundamentals}
 
-
-
-\subsection{Umgebungen}
-Wer bei uns eine Arbeit schreibt, kommt um Definitionen, Sätze, Beweise, Abbildungen und Tabellen nicht herum.
-
-\dots
+\section{Graph Layouts and Visualization}
+\begin{definition}
+    A \emph{graph} in graph theory comprises a set of \emph{nodes} and the relationships or connections between them, known as \emph{edges}.
+\end{definition}
+\noindent
+Therefore graphs are a mathematical representation of physical networks like metro systems, road networks, telecommunication structures but can also represent abstract networks such as social networks, phylogenetic networks and many more. These graphs can be represented in a variety of ways, including adjacency lists, adjacency matrices, incidence matrices and set notations, each of which offers a distinct perspective and utility for a wide range of computational and analytical tasks. This remarkably  abstract sort of graph representation, however, is frequently difficult to grasp. As a result, a visual representation of graphs is often used in addition to the traditional methods.
 
 \begin{definition}
-  Dies ist eine \emph{Definition}, welche sich sehr leicht erstellen lässt.
+    A \emph{graph layout} is a visual representation of a given graph in which the node and edge positions are chosen to suit particular aesthetic and functional criteria, depending on the specific needs and nature of the graph being visualized.
 \end{definition}
+\noindent
+A graph layout's primary objective is to depict the diagram's structure in a manner that is both clear and straightforward, ensuring that the reader can effortlessly gain insights and interpret the information presented within the graph. This clarity in presentation is paramount for effective communication. Another significant advantage is that graphs, when visually portrayed, often encapsulate and convey a wealth of information, surpassing what text-only representations can offer. Moreover, the graphical representation of graphs serves as a powerful tool for the swift identification of patterns, clusters, or anomalies in data. %\cite{Visualization}.
+Venturing into the more abstract realm of theoretical computer science, the importance of visualization becomes even more pronounced. This is especially true when delving into the intricacies of understanding and dissecting graph-based algorithms. By employing a graph's graphical representation, researchers and students can acquire a visual insight into the various phases and operations of an algorithm. Such a visual approach not only demystifies the underlying logic and structure of the algorithm but also provides a platform for an intuitive evaluation of its efficiency and overall performance. In the process, visualization can serve as a sentinel, highlighting potential errors or inconsistencies lurking within an algorithm. It's worth noting that a meticulously crafted graphical representation can often expedite and sharpen the comprehension of intricate algorithms and their subsequent impact on a graph, far more than a text-based or formal narrative might \cite{Visualization}.
+Before we dive into some instances of graph layouts and visualizations, let's go over some general considerations for graph layout quality and optimization. There are obviously several techniques and algorithms for constructing graph layouts, and the best one is frequently decided by the type of graph and the unique use case. The optimality of a graph layout is also dependent on the scenario, and depending on this, different qualities are used. In the following, we will look more closely at a few interesting aesthetic variables that influence the overall experience with different graph visualization \cite{aesthetic}. The first two properties are the most important to our task, and they are extremely important in the comparable yet distinct layouts we will examine next.
 
-Eine kurze Überleitung von einer Definition zu einem Satz hilft dem
-Leser zu verstehen, wohin die Reise gehen soll.
-
-Manchmal braucht man auch noch ein Lemma, damit der Beweis dann leichter von der Hand geht.
-
-\begin{lemma}[Andres Lemma] % Beachte, dass man sowohl Lemmata als auch Sätzen in der Regel aber keine Namen gibt
- Ein Lemma vorneweg erleichtert die Beweisführung.
- \label{lem:andre}
-\end{lemma}
-\begin{proof}
- Nach dem Distributivgesetz gilt:
- 
- \[ (a+d) \cdot c = ac + dc \]
-\end{proof}
-
-\begin{theorem} \label{thm:hauptsatz}
-  Wichtige und grundlegende Sätze lassen sich leicht hervorheben.
-\end{theorem}
-\begin{proof}
-  Der Satz gilt offensichtlich, denn nach \cref{lem:andre} gilt:
-  \begin{equation*}
-    \sum_{i = 1}^{n} 1 = n
-  \end{equation*}
-  Zudem wird der Beweis automatisch mit einem q.e.d.-Symbol\footnote{Nach Möglichkeit sollte vermieden werden, dass der Beweis mit einer Leerzeile abgeschlossen wird, so wie es beim Beweis von \cref{lem:andre} der Fall ist. Das kann zum Beispiel durch Hinzufügen einer Floskel wie "`Damit ist die Aussage des Satzes bewiesen."' errreicht werden. Übrigens funktionieren Fußnoten genau so. Wichtig ist hier, dass direkt vor dem Kommando kein Leerzeichen oder eine Leerzeile ist.} beendet.
-\end{proof}
-
-Auch wenn wir \cref{lem:andre} und \cref{thm:hauptsatz} einen Namen verpasst haben, macht man das in der Regel aber eher nicht.
-
-\begin{corollary}
- Aus einem Satz lassen sich oft einfache Resultate ableiten, die dann in einem Korollar festgehalten werden.
-\end{corollary}
-
-
-\subsection{Verweise}
-Auf Sätze, wie z.B.\ \cref{thm:hauptsatz}, lässt sich mithilfe des Befehls \verb+\cref{labelname}+ verweisen, wenn man in der Satz-Umgebung einen "`Label"' mit \verb+\label{labelname}+ gesetzt hat.  
-Genauso können wir auf den nächsten Abschnitt, also \cref{sec:leichtigkeit}, verweisen. Ist ein Verweis besonders weit weg, kann man \verb+\cpageref{labelname}+ verwenden, 
-um dem Leser zu sagen, auf welche Seite er springen muss -- \cref{sec:leichtigkeit} ist auf \cpageref{sec:leichtigkeit}.
-Wir benutzen hier das Paket (\verb+cleveref+), welches nicht nur die Nummer sondern auch automatischen das richtige Label hinzufügt. Benötigt man nur die Nummer, so verwendet man \verb+\ref{labelname}+ .
-Üblicherweise beginnt man einen Labelnamen mit dem Typ der Umgebung, auf die man verweist, also z.B.\ \verb+\label{fig:trapez}+ für eine Abbildung (engl.\ \emph{figure}).  
-Ach ja, zum Hervorheben (engl.\ \emph{emphasize}) eines \emph{neuen Begriffs} verwendet man den Befehl \verb+\emph{neuer Begriff}+, wenn der neue Begriff zum ersten Mal verwendet wird.
-
-
-\subsection{Floatende Elemente}
-\label{sec:leichtigkeit}
-Floatende Elemente (oder auch kurz einfach \emph{floats}) \emph{gleiten} durch das Dokument und \LaTeX{} ermittelt selbstständigt eine geeignete Stelle im PDF um diese Anzuzeigen.
-Die wichtigsten floats sind Abbildungen (\verb+figure+), Algorithmen (\verb+algorithm+) und Tabellen (\verb+table+).
-
-In diesem Abschnitt erläutern wir die einzelnen float-Elemente.
-Eine Übersicht über die verschiedenen floating-Regeln findet sich am Ende in \cref{tab:floatparameters}.
-
-\subsubsection{Abbildungen}
-Abbildungen, wie z.B.\ \cref{fig:trapez}, sind schnell eingefügt.  
-\emph{Wichtig:} Fügen Sie eine Abbildung immer erst nach der ersten Referenz auf die Abbildung ein!
-
-\begin{figure}[h] % oft benutzt man einfach die Kombination [htb]
-  \centering
-  \includegraphics[page=3]{trapez}
-  \caption{Das ist eine Abbildung. Sie floatet nach der Regel \emph{here} (h), d.h. \LaTeX{} wird versuchen die Abbildung möglichst direkt vor dem untigen Absatz ("`Im Allgemeinen\dots"') zu platzieren. Weitere Positionierungsregeln werden in \cref{tab:floatparameters} erläutert.} 
-  \label{fig:trapez}
-\end{figure}
-
-Im Allgemeinen braucht man die Endung der Bilddatei beim Einbinden mit dem Paket \verb+\includegraphics+ nicht mit anzugeben.  
-Es empfiehlt sich, alle Bilddateien in einen Unterordner abzulegen.  
-In mehrteilige Abbildungen kann man mit dem Paket \verb+subcaption+ jede mit einer eigenen Bildunterschrift versehen.  
-Man kann sich dann im Text sowohl auf die Teilabbildungen (z.B.\ \cref{fig:trapez-eins}) als auch auf die Gesamtabbildung (z.B.\ \cref{fig:zwei-trapeze}) beziehen.
-
-Bei Abbildungen ist die Caption üblicherweise unter der eigentlichen Grafik.
-Für alle floats gilt, dass das \verb+\label{...}+ direkt nach der \verb+\caption{...}+ gesetzt wird, damit bei einem Click auf die Referenz (\verb+\cref{...}+) auch an die richtige Stelle gesprungen wird (und nicht etwa auf den Absatz darüber).
-
-\emph{Wichtig:} Man sollte sich im Text auf jede Abbildung wenigstens einmal beziehen. 
-
-\begin{figure}[bp]
-  \begin{subfigure}{.48\textwidth}
-    \centering
-    \includegraphics[page=1]{trapez}
-    \caption{Die erste Teilabbildung.}
-    \label{fig:trapez-eins}
-  \end{subfigure}
-  \hfill % \hfill sorgt dafür, dass die obere Abbildung an den linken Rand rutscht und die untere Abbildung entsprechend an den rechten. Dies geht nur, weil hier keine Leerzeilen sind (die neue Absätze definieren würden).
-  \begin{subfigure}{.48\textwidth}
-    \centering
-    \includegraphics[page=2]{trapez}
-    \caption{Die zweite Teilabbildung.}
-    \label{fig:trapez-zwei}
-  \end{subfigure}
-  \caption{Das ist eine Abbildung, die aus zwei Teilen besteht. Sie versucht erst \emph{bottom} platziert zu werden, an sonsten erzeugt sie eine \emph{float page}.}
-  \label{fig:zwei-trapeze}
-\end{figure}
-
-\subsubsection{Algorithmen} 
-Mit der \verb+algorithm+-Umgebung (aus dem Paket \verb+algorithm2e.sty+) ist es nicht schwer ist Algorithmen in Pseudocode zu setzen, siehe \cref{alg:binsearch}.
-
-\begin{algorithm}[t]
-  \SetKw{True}{true}
-  \SetKw{False}{false}
-  \caption{BinäreSuche(Feld $A$, ganze Zahl $n$, Element $x$)}
-  \label{alg:binsearch}
-  \Input{sortiertes Feld $A$, Länge $n$, gesuchtes Element $x$}
-  \Output{\True genau dann, wenn $x$ in $A$ enthalten ist}
-  
-  $l = 0$ \;
-  $r = n-1$ \;
-  
-  \While{$l \le r$}{
-    $m = \lfloor (l + r)/2 \rfloor$ \;
-    \If{$A[m] == x$}{
-      \Return \True \;
-    }
-    \ElseIf{$x < A[m]$}{
-      $r = m - 1$ \;
-    }
-    \Else{
-      $l = m + 1$ \;
-    }
-  }
-  \Return \False
-\end{algorithm}
-
-Das gleiche geht problemlos auch ohne Zeilennummern, dazu benutzt man einfach in der \verb+algorithm+-Umgebung den Befehl \verb+\LinesNotNumbered+.
-
-\subsubsection{Tabellen}
-
-Um \LaTeX{} etwas in seiner Entscheidung zu beeinflussen haben wir die Möglichkeit, für jedes float einen oder mehrere Positionierungsparameter anzugeben.
-Eine Übersicht findet sich in \cref{tab:floatparameters}.
-
-\begin{table}[tb]
- \caption{Positionierungsparameter für floats. Diese Tabelle selbst hat die Wahl zwischen \emph{top} und \emph{bottom}.}
- \label{tab:floatparameters}
- \centering
- \begin{tabularx}{0.9\textwidth}{p{1cm}cX}
-  & Wert & Erklärung\\
- \hline
-  \texttt{[t]}  & \emph{top} & Das Element wird oben auf einer Seite angezeigt. \\
-  \texttt{[b]}  & \emph{bottom} & Das Element wird unten auf einer Seite angezeigt. \\
-  \texttt{[p]}  & \emph{page} & Das Element wird auf einer neuen Seite angezeigt. Diese Seite wird auch \emph{float page} genannt; sie kann mehrere \texttt{[p]}-Elemente beherbergen. \\
-  \texttt{[h]}  & \emph{here} & Das Element wird nah an der Stelle angezeigt, an der es im Code definiert ist. Das kann irgendwo auf der Seite sein. \\
- \end{tabularx}
-\end{table}
-
-Innerhalb der eigentlichen ``Tabelle'' befindet sich ein \verb+tabularx+-Element, dass den Inhalt darstellt.
-Elemente dieses Typs haben diverse Vorteile gegenüber normalen \verb+tabular+-Elementen.
-Zum einen lässt sich die Breite der Tabelle festlegen (hier $90\%$ der Textbreite), zum anderen stehen neben den klassischen zentrierten, links- oder rechtsbündigen (\verb+l,r,c+) Spalten auch Spalten mit fester Breite zur verfügung.
-Diese finden auch in \cref{tab:floatparameters} Verwendung. 
-Besonders zu beachten ist, dass sich Text in \verb+p+ oder \verb+X+ Spalten wie text in normalen Text-Absätzen verhält, also mit automatischem Zeilenumbruch und Silbentrennung.
-
-\subsection{Literaturverweise}
-
-Auch Verweise auf andere Arbeiten, wie die von Mustermann und Musterfrau \cite{mustermann+etal-11}, sind ganz einfach.  
-Wenn es von einem Artikel eine Konferenzversion \cite{bdln-lhod-02} und eine Zeitschriftenversion \cite{bdln-odgvel-05} gibt, so sollten Sie stets die Zeitschriftenversion (oder ein Buch \cite{gj-cigtn-79}) zitieren.
-Tragen Sie bei einem Konferenzartikel neben Titel, Namen der Autoren und des Tagungsbandes gegebenenfalls auch die Namen der Herausgeber in die bib-Datei ein. 
-ISBN-Nummern sind nicht nötig.  
-Eine große Hilfe beim Identifizieren eier Quelle ist der Digital Object Identifier%
-\footnote{\href{https://www.doi.org/}{https://www.doi.org/}}
--- kurz \emph{DOI} genannt.
-Sofern möglich sollte stets der DOI einer zitierten Arbeit angegeben werden.
-Seien Sie vorsichtig mit Umlauten \cite{bkns-blol-10} und Unterstrichen in der bib-Datei.
-
-\emph{Wichtig:} Zitieren Sie so, dass der Satz, in dem ein Zitat vorkommt, auch ohne das Zitat noch Sinn ergibt; 
-das Zitat soll eine Zusatzinformation sein. 
-\begin{description}
-\item{Gut:} Binucci et al.\ \cite{bdln-odgvel-05} beschäftigen sich mit der Beschriftung von Graphen.  
-\item{Schlecht:} \cite{bdln-odgvel-05} beschäftigt sich mit der Beschriftung von Graphen.
-\end{description}
-
-Möchte man einen clickbaren Link auf eine Website, wie zum Beispiel \href{https://www.openstreetmap.de/}{OpenStreetMap} oder \href{http://www.graphdrawing.org/}{http://www.graphdrawing.org/} setzen, verwendet man einfach \verb+\href{link}{name}+.
-
-\subsection{Geladene Pakete}
-Folgende Pakete werden von der Klasse \verb+algothesis+ automatisch mittels \verb+\usepackage+ geladen:
 \begin{itemize}
- \item \verb+[font=small,format=hang,labelfont=bf,figurename=Fig.,tablename=Tab.]{caption}+
- \item \verb+[linesnumbered,algoruled,longend,vlined]{algorithm2e}+
- \item \verb+{amsmath,amsfonts,amssymb,amsthm}+
- \item \verb+{graphicx,xcolor}+
- \item \verb+[bookmarks,bookmarksnumbered,pdfusetitle,pdfencoding=auto]{hyperref}+
- \item \verb+[labelfont=normalfont]{subcaption}+
- \item \verb+{enumerate}+
+    \item \textbf{Clear visibility of nodes and edges or Orthogonality}: All nodes and edges should be clearly visible and distinguishable from one another, allowing viewers to quickly identify individual parts as well as understand the graph's interactions and connections without misunderstanding or ambiguity. This could for example be done by fixing the nodes and edges to an orthogonal grid.
+    \item \textbf{Minimising edge crossings}: Edge crossings in a graph should be avoided since they can diminish legibility greatly, leading to confusion and possibly misinterpretation of the shown data. A well-organized graph promotes clarity by reducing these crossings, allowing the reader to easily detect relationships and connections within the graph. Additionally, reducing edge crossings aids in the maintenance of a clean and organized visual structure, which is especially important in complicated networks with many nodes and connections. This method not only improves the graph's overall aesthetic appeal, but also assures that the information it represents is correct and easy to understand.
+    \item \textbf{Maximum Angles}: Maximizing the smallest angle between edges in graph drawings improves readership by eliminating clutter and overlap, resulting in clearer node connections and routes. This method simplifies tracing paths and comprehending the structure of the graph by naturally revealing its hierarchical or relational data. Furthermore, it facilitates in distinguishing between distinct graph pieces, making complex information more accessible and easier to evaluate.
+    \item \textbf{Symmetry}: Improving symmetry in graph designs increases not only readability and aesthetic appeal, but also allows for faster recognition of patterns and relationships. Symmetric patterns make it easier to compare different areas of the graph, resulting in a more effective conveyance of information and insights. Furthermore, this symmetry can assist in emphasizing major data points and patterns, making the graph more intuitive and user-friendly for analysis and interpretation.
+    \item \textbf{Edge Bending}: A graph with too many edge bends can lose clarity, resulting in a cluttered look that obscures node connections and the overall structure of the network. This complexity can impede quick grasp of relationships and patterns, as well as contribute to data misinterpretation, particularly in large networks where good visual representation is critical for effective analysis.
 \end{itemize}
 
-Um ein einheitliches Aussehen der Abschlussarbeiten zu gewährleisten, sollte an diesen Parametern nichts geändert werden.
+\subsection{Stack Number Layout}
+\begin{definition}
+    The \emph{stack number layout} (also called \emph{book embedding}) represents a graph in which the nodes are arranged along a common line called the \emph{spine} of the book. The edges of the graph are then distributed over \emph{pages} of the book. A page corresponds to a half-plane bounded by the spine.
+\end{definition}
+\noindent
+A graph's book thickness $b$ (also known as page number, stack number, and fixed outerthickness) is defined as the least number of half-planes for any book embedding of the graph. Ollmann's 1973 definition \cite{book_thickness} of graph book thickness is an important measure in graph theory, concentrating on the optimization of graph layouts within a limited space. This idea is especially important in domains like computational geometry and network analysis, where visual clarity and effective space usage are critical. By minimizing edge overlap, the book embedding method not only improves the legibility of the graph but also plays an important role in algorithmic graph theory. It provides a formal framework for examining graph features and difficulties, particularly in thick graphs where edge crossings can make comprehension difficult. Because of its success in decreasing visual complexity, this method is a valuable tool for both theoretical study and practical data visualization applications.
+
+\subsection{Queue Number Layout}
+\begin{definition}
+    In the \emph{queue number layout}, the graph's vertices are restricted to a line, while the edges are represented by distinct half-planes above and below this line, referred to as \emph{queues}.
+\end{definition}
+\noindent
+The aim in this representation, first defined by Heath and Rosenberg in 1992 \cite{queue_layout}, to obtaining a linear arrangement of nodes along a baseline and assigning the graph's edges to queues in a way that precludes nesting of independent links inside the same queue. This approach attempts to organize the graph's structure in a clear, sequential manner, with the queue number $q$ representing the least number of queues required for every possible queue configuration of the graph. Unlike the stack number, which is ordered last-in-first-out, the queue structure is ordered first-in-first-out, providing a unique perspective in graph representation. This strategy is particularly successful at emphasizing the graph's directed flow of data and interactions, making it easier to follow and analyze. Similar to the stack number layout, one of the key goals of this layout method is to reduce edge crossings, hence considerably improving the overall readability and interpretability of the graph.
+
+\subsection{The Track Layout Problem}
+    \label{chap:track}
+\begin{definition}
+    A \emph{graph track layout} is a division of its vertices into sequences called \emph{tracks}, with the vertices in each sequence forming an independent set and the edges between each two pairs of tracks forming a non-crossing set.
+\end{definition}
+\noindent
+We are now dealing with the track layout problem (TLP), which is a well-known subject in graph drawing and consequently the true topic of this study, in which we exclusively inspect undirected graphs. The track layout, like queue and stack number layouts, is an arrangement of graphs with the same purposes, including clarity and readability. Dujmovi et al. were the first to define this problem \cite{track_layout}. The TLP, also referred to as the k-track problem, is concerned with determining the fewest number of tracks called track-number $t$ for which the nodes of the graph can be distributed among them, according to the following rules:
+\begin{enumerate}
+    \item \textbf{Uniqueness}: Each node is on precisely one track.
+    This rule works in the same way as the previously discussed aesthetic of visibility.
+    \item \textbf{Adjacent Nodes}: Adjacent nodes of the graph must not be on the same track, which prevents edges from running within a track.
+    \item \textbf{No Crossings}: This implies that there are no edges $(u,w)$ and $(i,j)$ for which $u$ comes before $i$ in one track, but $w$ comes after $j$ in another track. It is important to note that this regulation prohibits only the act of crossing if the start- and endnodes of the edges are on the same track. To better understand this rule some examples of forbidden crossings as well as an example of an allowed edge crossing is depicted in \cref{fig:crossings} below.
+\end{enumerate}
+
+\begin{figure}[ht]
+    \centering
+
+    \begin{subfigure}[b]{0.45\linewidth}
+        \includegraphics[width=\linewidth]{figures/Verbot2.png}
+        \caption{Forbidden Crossing through more Tracks}
+        \label{fig:verbot2}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\linewidth}
+        \includegraphics[width=\linewidth]{figures/Erlaubt.png}
+        \caption{Allowed Crossing}
+        \label{fig:erlaubt}
+    \end{subfigure}
+
+    \begin{subfigure}[b]{0.9\linewidth}
+        \centering
+        \includegraphics[width=0.7\linewidth]{figures/Verbot1.png}
+        \caption{Forbidden Crossing in Adjacent Tracks}
+        \label{fig:verbot1}
+    \end{subfigure}
+
+    \caption{Forbidden and Allowed Crossings}
+    \label{fig:crossings}
+\end{figure}
+\clearpage
+
+\subsection{Example}
+The following illustrations serve to differentiate and visualize the differences between the three layouts and helps us to be able to discern between them. \Cref{fig:octahedron} shows an octahedron, a polyhedron with eight faces, twelve edges, and six vertices, with four edges meeting at each vertex. Below this, you can see \cref{fig:octahedron_graph}, that shows a graph represetation in which each vertex is connected to the surrounding vertices that span the triangular surfaces of the object.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.5\linewidth]{figures/octahedron.png}
+    \caption{Octahedron \protect\footnotemark}
+    \label{fig:octahedron}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.525\textwidth]{figures/octahedron_graph.png}
+    \caption{Graph Interpretation of an Octahedron}
+    \label{fig:octahedron_graph}
+\end{figure}
+\footnotetext{Rosemark, \textit{octahedron}, cleanpng.com, 30.11.2023}
+\noindent
+This graph can now be shown as a book embedding, in the form of a queue layout as well as using the track layout. The three visualisations shown in \cref{fig:octahedron_layouts} clearly highlight the differences between the layouts. While the book embedding divides the graph into distinct pages or layers to ensure non-crossing edges, the queue number layout organizes the edges into queues, aiming for a compact representation. It is noticeable that three tracks are required to represent the graph as a track layout. The other two alternatives just necessitate the use of two stacks respectively queues to display the same graph.
+
+\begin{figure}[ht]
+    \centering
+
+    \begin{subfigure}[b]{0.45\linewidth}
+        \includegraphics[width=\linewidth]{figures/octahedron_stack.png}
+        \caption{Octahedron Graph drawn in 2 Stacks}
+        \label{fig:octahedron_stack}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.45\linewidth}
+        \includegraphics[width=\linewidth]{figures/octahedron_queue.png}
+        \caption{Octahedron Graph drawn in 2 Queues}
+        \label{fig:octahedron_queue}
+    \end{subfigure}
+
+    \begin{subfigure}[b]{0.45\linewidth}
+        \centering
+        \includegraphics[width=0.8\linewidth]{figures/octahedron_tlp.png}
+        \caption{Octahedron Graph drawn in 3 Tracks}
+        \label{fig:octahedron_tlp}
+    \end{subfigure}
+
+    \caption{Octahedron Graph drawn in different Layouts \protect\footnotemark}
+    \label{fig:octahedron_layouts}
+\end{figure}
+
+\footnotetext{Sergey Pupyrev, \textit{octo}, spupyrev.github.io/linearlayouts.html, 30.11.2023}
+
+\clearpage
+
+\section{Introduction to SAT-Solving}
+Propositional logic has long been regarded as a foundation of reasoning in philosophy and mathematics. Its formalization as Boolean algebra was accompanied by the discovery, that a large range of combinatorial problems can be represented as propositional satisfiability (SAT) problems. As a result, SAT solving became an important method in theoretical computer science and mathematical logic. It needs to solve SAT problems, which question whether it is possible to provide truth values to a Boolean formula in order for it to evaluate to true. This topic is not simply of academic interest, but it also has significant practical relevance because it underpins various applications in cryptography, software verification, artificial intelligence, and optimization problems. Understanding the structure of SAT issues is critical to understanding the difficulty and utility of SAT solving. Conjunctive Normal Form (CNF) is commonly used to write SAT problems, in which a formula is an AND relation of many phrases and each clause is an OR relation of literals. A literal in this sense is a Boolean variable or its negation. Despite the fact that the structure's simplicity hides the potential complexity of the difficulties, its elegance allows for a consistent approach to problem solving. SAT solvers, sophisticated algorithms that use advanced methods like backtracking, unit propagation, and clause learning to answer these issues, aid in the resolution of these problems. The evolution of these solvers throughout time is a monument to the inventiveness and perseverance of field researchers. Initially impossible issues are now frequently tackled, illustrating the extraordinary efficacy of these techniques. However, the difficulties in SAT solving exist, particularly when dealing with extremely large or convoluted issues. The topic of SAT solving research is dynamic and continuing, driven by the constant attempt to improve the efficiency of algorithms and heuristics. This search is not only intellectual; the ramifications in our world of complicated decision-making are far-reaching. Advances in SAT solving carry the potential of uncovering answers to some of the most difficult and convoluted issues in computer science and beyond \cite{Sat_solving}.
+
+\subsection{Complexity}
+Within the field of computational computability, problem complexity is an essential aspect. Specifically, the classification of issues into several complexity classes and levels of difficulty. The study of NP-hard issues is a key component and a large area of research attention. These issues are well-known for being computationally challenging and are crucial to comprehending algorithms and their bounds.
+
+\begin{definition}
+    An \emph{NP-hard problem} refers to being at least as difficult as the most difficult problem in the NP complexity class. Any NP-hard problem in polynomial time can be reduced to any NP-hard problem in polynomial time. This means that if one NP-hard problem can be solved effectively (in polynomial time), then so can all NP problems.
+\end{definition}
+\noindent
+The satisfiability problem of propositional logic also belongs to this class of problems. Furthermore, it has been proven to be NP-complete. Nevertheless, NP-hard problems are not necessarily in NP, i.e., they are not guaranteed to be verified in polynomial time. Because of its NP-hardness, the SAT serves as the foundation for classifying additional problems as NP-hard. If a problem can be reduced to SAT in polynomial time, it is also considered NP-hard \cite{SAT_Complexity}. When we look at the TLP through the lens of SAT, we get a boolean formula whose satisfiability determines whether there is a layout that follows the rules. This consideration will be important in our further experiments. If it is not immediately evident whether there are configurations that satisfy the formula or clauses that signal unfulfillability, all conceivable configurations must be checked in order to reach a solution. This could result in much longer processing times for larger variable sets.
+
+\section{Related Work}
+Looking at mathematical problems and general computer science problems from a sat perspective is ubiquitous. Although graph problems are uncommon, they can still be solved using a propositional interpretation. In their paper "The Book Embedding Problem from a SAT-Solving Perspective," bekos et al. examined one of these graph problems \cite{book_embedding_sat}. The researchers presented a simple and straightforward SAT formulation for graph queue number layout. They attempted to solve some non-trivial instances of this problem set in a reasonable amount of time using their SAT-formulation. Furthermore, various hypotheses about planar graphs were tested, and a lower bound of 4 for $b$ for 1-planar graphs was discovered. The following work is based on the methods and formulations shown by bekos et al. and deals with the TLP in a similar way.
+
+\chapter{SAT Formulations for the TLP}
+Let $G = (V,E)$ be the graph we consider in our problem, where $V =\{v_1,v_2,...,v_n\}$ represents the vertices and $E = \{e_1,e_2,...,e_n\}$ the corresponding edges of the graph. The primary objective is to determine whether there exists a Tracklayout $L$ for this graph that meets the conditions outlined in the previous section. To tackle this challenge, we first frame the problem in terms of a logical formula, denoted as $F(G, t)$. This formula seeks to address the problem by encoding it into a SAT instance. It's important to highlight that the formula is deemed satisfied if and only if there exists a layout $L$ that displays the initial Graph $G$ on $t$ tracks. Our formula will hold the Conjunctive Normal Form (CNF), which is an effective tool for expressing any SAT-related problem. It combines clauses, where each clause is essentially a conjunction of literals, which can either be in their original form or negated. The formula $F(G, t)$ is defined by its set of variables and the associated set of rules. The primary role of these rules is to ensure the correct assignment of the variables. They are expressed in a specific type of propositional logic, which can be  transformed into CNF clauses straightforwardly \cite{conjunction}. In the following we will define the variables we will use in our SAT formulation and discuss the clauses we are dealing with to fulfill the rules of the TLP.
+
+\section{Variables \& Clauses}
+\label{sec:vars_clauses}
+\subsection{Basic Variables and Clauses}
+\label{sec:basic_clauses}
+%Wie viele klauseln gibt es jeweils zu transitivität und assymetrie und dem andren ? \\
+
+The variables of $F(G, t)$ model a Track Layout of $G$ on $t$ tracks, if such a structure exists. To assign a node of the graph to a track, we use the variable $\sigma(v_i,t_k)$ for each pair of node $v_i \in V$ and track t. For instance, the assignment $\sigma(v_1, t_1)$ is considered true when node $v_1$ is positioned on track $t_1 \,$ in $\, L$. In order to formulate all possible assignments of each node on every track, a total of $ \vert V \vert \times t$ variables are required. We may now assign a track to each node using this variable. In order to fulfill the first rule of the TLP, the Uniqueness, we must verify that each node is on exactly one track, which requires our first clauses. To maintain clarity, we will approach this in two parts whereby the first one guarantees that every node is on at least one track:
+    $$ (\sigma(v_i,t_1) \lor \sigma(v_i,t_2) \lor \dots \lor \sigma(v_i,t_n)) \, \forall v_i \in V \text{ and every track }t $$
+Therefore the first part of each of the clauses will contain $t$ variables. Next we will confirm that every node is on at most one track which combined with the first part will ensure that for each node, precisely one of the track variables evaluates to true, i.e. that each node is assigned to exactly one track. The second part is formulated as follows:
+    $$ (\lnot\sigma(v_i, t_x) \lor \lnot\sigma(v_i, t_y)) \, \forall v_i \in V \text{ and every combination of two tracks } x, y \text{ with } x \neq y$$
+\noindent
+As outlined, we will ignore the diagonal of the track-combinations. Also note that due to commutativity $(\lnot \sigma(v_i, t_x) \lor \lnot \sigma(v_i, t_y))$ is the same as $(\lnot \sigma(v_i, t_y) \lor \lnot \sigma(v_i, t_x))$. This assumptions helps us to reduce the number of variables by a significant amount and thus obtain a total number of $\frac{(\vert V \vert^2-\vert V \vert)}{2}$ disjunctions of two negated literals each resulting in $2 \times \frac{(\vert V \vert^2-\vert V \vert)}{2}$ variables for the second part of this rule. All in all, when we merge these two parts, we need $\vert V \vert$ larger clauses with $t + 2 \times \frac{(\vert V \vert^2-\vert V \vert)}{2}$ variables each to establish the first rule. The next clauses try to forbid that neighbouring nodes are on the same track. To enforce the second rule, we have to look at the graph's edges. This can be easily achieved by adding the following conjunctions:
+        $$ \forall e_{i,j} \in E : (\overline{\sigma(v_i,t_x) \land \sigma(v_j,t_x))} \text{ for every track } t $$
+This implementation leads to a total of $\vert E \vert \times t$ clauses with one negated conjunction each, or more precisely $2 \times (\vert E \vert \times t)$ variables. With the help of the clauses defined so far, we can assign a unique track to each node without breaking the rules of the TLP.
+\subsection{First Approach}
+Now we turn our attention to the core problem of the track layout, namely the restriction of forbidden crossings. To detect crossings in the layout, we first need a way to determine the position of the nodes within the tracks. The simplest way to arrange the nodes would be to include a variable that assigns each node a unique number that indicates its position along the tracks. Therefore, we define the tuple $\phi(v_i,p)$ for each $v_i \in V$ and $p$ up to the total number of nodes. Hence $\phi(v_i,p)$ is true, when $v_i$ is on position $p$. Note that the nodes are taken in a total order, so we can assume that for each node $v$ exactly one variable $\phi(v_i,p)$ must be true. Ultimately this method results in ${\vert V \vert}^2$ variables to express all possible orders. Furthermore, clauses would be required to ensure that no two nodes are in the same position. This is equivalent to rule 1's uniqueness and results in $\vert V \vert$ clauses with $\vert V \vert + 2 \times \frac{(\vert V \vert^2-\vert V \vert)}{2}$ variables. To better understand this definition, let's take a look at the \cref{fig:order_example_tot} below.
+
+\begin{figure}[ht]
+  \centering
+  \begin{minipage}{0.6\textwidth}
+    \includegraphics[width=\linewidth]{figures/Order_example.png}
+  \caption{Example for Total Order}
+  \label{fig:order_example_tot}
+  \end{minipage}%
+  \begin{minipage}{0.4\textwidth}
+    To formulate this sequence of nodes, these variables must come true:
+    \begin{itemize}
+    \item  $\phi(v_1,1)$, $\phi(v_2,2)$, $\phi(v_3,3)$, $\phi(v_4,4)$ and $\phi(v_5,5)$
+    \end{itemize}
+  \end{minipage}
+\end{figure}
+\noindent
+With the help of $\phi$, we must now exclude all possible forbidden crossing types.
+To accomplish this, we created the following formula:
+    $$ \forall e_{i,j}, e_{u,w} \in E, \ \forall m,n,a,b \text{ in range of } \vert V \vert \text{ with } m<n, \, a<b:$$
+    $$\overline{(\sigma(v_i,t_x) \land \sigma(v_u,t_x) \land \sigma(v_j,t_y) \land \sigma(v_w,t_y) \land \phi(v_i,p_m) \land \phi(v_u,p_n) \land}$$
+    $$ \overline{\phi(v_w,p_a) \land \phi(v_j,p_b))}\text{ for all disjoint pair of tracks } t_x \text{ and } t_y $$
+Summarised for this interpretation to a total number of
+$ (\vert E \vert^2 - \vert E \vert)) \times \frac{(t^2-t)}{2} * \frac{(\vert V \vert^2-\vert V \vert)}{2} \times \frac{((\vert V \vert-2)^2-(\vert V \vert-2))}{2}$ clauses are needed. However, these clauses are not enough,
+to assign a clear result to our sat formula. The positioning between the tracks proves to be a hurdle, as no conditions have yet been introduced for this. The distribution of nodes within a track also poses a major problem with this formulation. For example, if $\phi(v_i,6)$ and $\phi(v_j,8)$ are true, it has not yet been ensured that node $v_i$ actually lies before node $v_j$. One way to define the exact position in L would be to force a node $v_i$ with $\sigma(v_i,t_1)$ to the first position with the help of further clauses, and to force another node $v_j$ with $\sigma(v_j,t_{max})$ to the last position. This has to be done with every node on the first respectively the lest track. Another possibility would be to define clauses for each node that force all nodes that lie on a track before this node to have a position that is less than the position of the chosen node. There we have to define this clauses for every node possible. This would increase the number of clauses considerably for the fact that it only limits the problematic areas we have using this method.
+\subsection{Second Approach}
+To more precisely specify the order, we require variables that allow us to view and compare the neighboring nodes for each node in L. We can also, prohibit crossings if we have access to all nodes and their neighbors on the respective tracks. As a result, we are now taking a different approach and defining a new variable $\omega$ to determine the relationship between two nodes. We define this variant as the tuple $\omega(v_i,v_j)$ for each $v_i,v_j \in V$. This variable evaluates to true if $v_i$ is one of the left neighbors of $v_j$ on any track.  Notice that variables $\omega(v_i,v_j)$ with $i = j$ can not evaluate as true, because this will be referred to $v_i$ and $v_j$ being the same node, that can obviously can not be the left neighbor of itself. This will eventually lead to ${\vert V \vert}^2$ variables. In this relative encoding of the sequence between nodes, clearly asymmetry has to hold for these variables, which will be ensured by the following rule:
+    $$ \omega(v_i,v_j) \leftrightarrow \lnot \omega(v_j,v_i) $$
+To reduce the total set of clauses by a substantial sum, we define the asymmetry of the variable $\omega(v_i,v_j)$ only for the case that $i < j$. The other literals $\omega(v_i,v_j)$ with $i > j$ can replaced with the respective counterpart $\lnot \omega(v_j,v_i)$ leading to $\frac{(\vert V \vert^2-\vert V \vert)}{2}$ clauses \cite{asymmetric}. In order to establish a proper order within a track, we must also ensure transitivity with in total ${\vert V \vert}^3$ clauses. This is done as follows:
+    $$ \omega(v_i,v_j) \land \omega(v_j,v_k) \rightarrow \omega(v_i,v_k) \, \forall \text{ pairwise distinct } v_i,v_j,v_k \in V$$
+Additionally we implement $t \times {\vert V \vert}^2$ clauses which cause that a node can only lie to the left of another node if both nodes are also on the same track:
+    $$ \omega(v_i,v_j) \rightarrow \sigma(v_i,t_k) \land \sigma(v_j,t_k) \, \forall \text{ pairwise distinct } v_i,v_j \in V \text{and every track }t$$
+Therefore, it is important to note that there are indeed nodes $v_i$ for which none of the variables $\omega$ with $\omega(v_i,v_n) \forall v_n \in V$ evaluates to true. This is precisely the case when the node n is on the right edge of the track. We will again point  this method out with help of the same example in \cref{fig:order_example_rel} we looked at before to truly understand the definition of this order implementation.
+
+\begin{figure}[ht]
+  \centering
+  \begin{minipage}{0.6\textwidth}
+    \includegraphics[width=\linewidth]{figures/Order_example.png}
+  \caption{Example for Relational Order}
+  \label{fig:order_example_rel}
+  \end{minipage}%
+  \begin{minipage}{0.4\textwidth}
+    To formulate this sequence with the relational method, these variables must come true:
+    \begin{itemize}
+    \item  $\omega(v_1,v_2)$, $\omega(v_1,v_3)$, $\omega(v_2,v_3)$ and $\omega(v_4,v_5)$
+    \end{itemize}
+  \end{minipage}
+\end{figure}
+
+Remember that $\omega$ alone is not enough to provide the complete track layout. Next, we have to block the intersections of edges using our new approach. This can be reached with the following conjunctions which we build for each disjoint pair of edges $e_{i,j}, e_{u,w}$ so that:
+    $$ \forall e_{i,j}, e_{u,w} \in E : \overline{(\sigma(v_i,t_x) \land \sigma(v_u,t_x) \land (\sigma(v_j,t_y) \land (\sigma(v_w,t_y) \land}$$
+    $$ \overline{\omega(v_i,v_u) \land \omega(v_w,v_j)}\text{ for all disjoint pair of tracks } t_x \text{ and } t_y $$
+Using this method, we can cut out a whole factor that was used to define the positions in the total order. We don't need to manifest the position of the nodes in an own variable, since we can also extract an unique order from only the relations between each nodes. All this results in
+$ (\vert E \vert^2 - \vert E \vert)) \times \frac{(t^2-t)}{2}$ clauses with 6 negated variables each.
+
+\subsection{Possible improvements}
+In general, there are numerous approaches for improving SAT formulas. In our second attempt, we decreased the number of clauses as well as the clause size. Let's take another look at the main problem of the TLP, the crossings. Let's examine the crossings, the TLP's primary issue, once more. It is essential that the nodes' order be defined in order to prevent them. This most likely indicates that w can't be reduced any further. However, we notice that, in addition to the nodes, we need another loop to handle all possible pairs of tracks. Defining a new variable to indicate that two nodes are on the same track is one idea that would enable us to look beyond this loop. As long as the nodes are on the same track, it wouldn't matter which track they are on according to this formulation. We therefore define a new variable $\psi$ for which $\psi(v_i,v_j) \forall v_i,v_j \in V$ evaluates to true if and only if $v_i$ and $v_j$ are on the same track. With the introduction of a new variable, we are obviously increasing the formula for the time being while needing ${\vert V \vert}^2$ variables for every possibility of every two nodes being on the same track. To apply this variable correctly, we need additional clauses that enforce our interpretation of $\psi$. Similar to the implication for the correctness of $\omega$ formulated in the second approach, we need $t \times {\vert V \vert}^2$ clauses which are worded as follows:
+    $$ \sigma(v_i,t_k) \land \sigma(v_j,t_k)\rightarrow \psi(v_i,v_j) \, \forall v_i,v_j \in V \text{and every track }t$$
+With the help of this new variable, it is possible to limit the crossing clauses. Again we have to formulate a conjunction which we construct for every disjoint pair of edges $e_{i,j} e_{u,w}$ in order that:
+    $$ \forall e_{i,j}, e_{u,w} \in E : \overline{(\psi(v_i,v_u) \land \psi(v_j,v_w) \land   \omega(v_i,v_u) \land \omega(v_w,v_j)}$$
+This formulation allows us to ignore another factor in our quantity of clauses and so on decrease the required clauses to $ (\vert E \vert^2 - \vert E \vert))$ and reduce the variables per clause by two. As we rated the first approach as significantly worse, we will review the two versions of the second approach and test their quality and speed. Therefore, we first state two hypotheses  for an expected outcome before moving forward with the implementation and additional testing.
+\begin{enumerate}
+    \item[H1:] The second version greatly reduces most of the clauses, making it much better for graphs with lots of edges.
+    \item[H2:] Both approaches work well for small graphs and graphs with few edges. The second method might even be worse, as it required extra additional clauses.
+\end{enumerate}
 
 
-\section{Fallstricke}
-\label{sec:notes}
-Einige Sachen sollte man im \LaTeX{}-Code vermeiden, um ein gut gesetztes Dokument zu erhalten. 
-Schauen Sie sich dafür bitte auch die Schreibkonventionen an, welche im Ordner mit den Leitfäden zu finden sind.
+\chapter{Implementation in Python}
+Even though Python may not offer the same performance as lower-level programming languages (such as C/C++), we will opt for it to implement the TLP and its solution approaches. Python has certain benefits, like readability and flexibility, which are very helpful for the nested loops that make up the clauses. Furthermore, we have easy access to Sat-Solvers through the variety of libraries, which we can use to create, modify, and solve our formula.
 
-In \cref{tab:badbox} sehen wir eine klassische \emph{badbox}, also ein Element das zu klein für dessen Inhalt ist.
-Mit einer Spalte vom Typ \verb+p+ oder \verb+X+ wäre das nicht passiert.
+\section{Introduction to the Python-SAT Library}
+PySAT is a Python library for editing, solving and analysing Boolean formulas and SAT (Satisfiability) problems. Born out of the need to create a unified and efficient collection of tools for SAT-related tasks in Python, PySAT integrates a number of widely used state-of-the-art SAT solvers such as MiniSat, Glucose and Lingeling. The library allows users to efficiently formulate Boolean formulas and analyse solutions, making it a valuable tool in research and development. Overall, PySAT provides an efficient and flexible platform for working on a wide range of Boolean logic and optimisation problems. Its ease of use and performance make it a popular choice for many scientific and industrial applications. Among the numerous core modules of the pysat toolkit, we will mainly use formula and solvers. While solvers are Python wrappers for the code originally implemented in the C/C++ languages, the formula module is a pure Python module. Boolean variables in PySAT are represented using natural numbers, with $\mathbb{N}^+\setminus\{0\}$. According to this representation, a literal is an integer, with $-1$ representing the literal $\lnot x_1$ and $5$ representing the literal $x_5$. Moreover a clause refers to a set of literals, with $[-3, -2]$ being an example of a clause $(\lnot x_3 \lor \lnot x_2)$ \cite{PySAT}. Once you have created variables and clauses, you can easily add them to a formula and have it solved by any solver contained in the library. The important thing here is that the formulae that the solver requires for evaluation are always converted into a CNF. The solve() method returns an assignment of the variables if the formula has a solution, or a false if the solution set is empty.
 
-\begin{table}[h]
- \caption{Der Inhalt einer Tabelle sollte mit Bedacht gewählt werden.}
- \label{tab:badbox}
- \begin{tabular}{ll}
- \hline
-  Hier ein kleines Beispiel: &
-  Dieser Text wird sehr lang, wahrscheinlich sogar zu lang für eine Zeile. So können Teile des Texts nicht nur über die Tabelle sondern auch über die Seite hinausragen.\\
-  \hline
- \end{tabular}
-\end{table}
+\section{Implementation of the SAT Formulations}
+With the help of PySAT, it is possible to create our desired variables in the form of 2D arrays. The variable $\sigma$, as defined in \hyperlink{alg:sigma}{algorithm 1}, is interpreted in such a way that $\sigma[v_i][t_k]$ is true, when node $v_i$ is on track $t_k$ or else false.
 
-Auch unschön sind Zeilenumbrüche in Formeln, die sich im Fließtext befinden. 
-$G=(V,E)$ ein Graph ist ein klassisches Beispiel dafür.
-Zu allem Überfluss fängt der vorherige Satz auch noch mit Formelsatz an -- besser wäre ``Sei $G=(\dots$'' gewesen.
-Möchte man verhindern, dass Formeln umgebrochen werden, setzt man ihren Inhalt in geschweifte Klammern.
+\begin{algorithm}[ht]
+    \caption{Implementation of $\sigma$}
+    \label{alg:sigma}
+        $\, \, \, \sigma = [][]$ \newline
+        $name = 0$ \newline
+        \For{node in range(nodes)}{
+            \For{track in range(tracks)}{
+                $ \, \, \, \sigma [\text{node}][\text{track}] = name$ \newline
+                $name \; = name + 1$
+            }
+            \, $\text{formula.append($\sigma$[node][track])for track in range(tracks)}$ \newline
+            \For{comb in combination($\sigma$[node][track] for track in range(tracks), 2)}{
+                \, $\text{formula.append([-comb[0], -comb[1]])}$
+            }
+        }
+\end{algorithm}
+\noindent
+Implementing this nested loop, we create all $ \vert V \vert \times t$ variables we need to determine the corresponding track of each node. In addition, we need to verify that $\sigma$ is working properly. The first one is straight-forward to follow because we don't need to create an extra method for it. Instead, we can directly append the relevant negated conjunctions inside the second loop while initializing $\sigma$. Lines 4 and 5, both inside the outer for, ensure that each node must be on exactly one track. $\omega$ and $\psi$ are realised equivalently using steps 1 to 3, whereby the inner loop is adjusted according to the quantity of variables ($ \vert V \vert \times \vert V \vert$) mentioned in chapter \ref{sec:vars_clauses}. $\omega[v_i][v_j]$ will be evaluated as true, if $v_i$ is a left neighbor of $v_j$ on any track $t$. Each variable $\psi[v_i][v_j]$ will be referred to as true if, and only if $v_i$ and $v_j$ are on the same track $t$. To implement the clauses regarding the the second rule, a for-loop is needed that iterates through a list of all edges and adds the clauses that prevent the two nodes from lying on the same track. By keeping in mind that we have to add this clauses for every track we end up with \hyperlink{alg:second_rule}{algorithm 2}.
 
-Packt man den Inhalt in geschweifte Klammern, bleibt alles in einer Zeile. 
-Sei ${G=(V,E)}$ ein Graph ist ein klassisches Beispiel dafür.
-Achtet man nun aber genau auf den rechten Rand dieses Absatzes, so sieht man, dass die Formel über den Rand des Blocksatzes hinausragt -- wir können also das selbe Problem wie oben haben.
+\begin{algorithm}[ht]
+    \caption{Implementation of the 2. TLP Rule}
+    \label{alg:second_rule}
+        \For{edge in Edges}{
+            \For{track in range(tracks)}{
+                $\text{formula.append(-$\sigma$[edge[0]][track], -$\sigma$[edge[1]][track])}$
+            }
+        }
+\end{algorithm}
+\noindent
 
-In beiden Fällen hilft oft ein einfaches Umstellen der Satzbausteine oder ein kurzes Füllwort.
+This leaves the implementation of the restriction of edge crossings and the corresponding variables to determine the order of the nodes.
+Um nun auch eine eindeutige reihenfolge definieren zu können, implementieren wir eine möglichkeit...
 
-Setzt man eine Fußnote nach einem Whitespace 
-\footnote{Whitespaces sind insbesondere Zeilenumbrüche und Leerzeichen.}, erhält man einen unschönen Abstand zwischen der Markierung und dem Wort, auf das sich die Fußnote wahrscheinlich bezieht.
+\section{Test Cases and Results}
 
-Punkte sind nicht immer Satzenden, und das sollte man \LaTeX{} auch mitteilen!
-Es gibt einen typographischen Unterschied zwischen \verb+Jun.-Prof. Kindermann+ und \verb+Jun.-Prof.\ Kindermann+, der besonders beim Reservieren von Platz sichtbar wird.
+\chapter{Comparison and Analysis of SAT Formulations}
 
-Möchte man verhindern, dass Wort und Referenz-Link in unterschiedlichen Zeilen laden, sollte man statt eines normalen Leerzeichens eine Tilde (\verb+~+) verwenden.
+\section{Efficiency of Different Formulations}
 
-Zum Schluss noch der Hinweis, dass die Abschlussarbeit \emph{beidseitig} gedruckt werden soll.
+\section{Advantages and Disadvantages of Each Formulation}
+
+\section{Recommendations for Specific Use Cases}
+
+
+\chapter{Discussion}
+
+\section{Comparison with Existing Solutions and Studies}
+
+\section{Limitations and Possible Extensions}
+
+\section{Outlook on Future Research}
+
+
+\chapter{Conclusion}
+
+\section{Summary of Key Findings}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \clearpage

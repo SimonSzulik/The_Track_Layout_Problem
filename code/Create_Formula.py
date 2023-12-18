@@ -129,6 +129,7 @@ def get_sequence_clauses_relation(nodes, tracks, edges, version):
                 same_track[node_1][node_2] = unique_number_same_track
                 unique_number_same_track += 1
 
+        # Implication of ψ
         for node_1 in range(nodes):
             for node_2 in range(nodes):
                 if node_1 < node_2:

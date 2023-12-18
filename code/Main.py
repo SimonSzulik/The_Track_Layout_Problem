@@ -53,19 +53,17 @@ test_graphs = get_dataset('../Data_Sets/Data_Set_10n_Nodes.txt')
 
 for filename, matrix in test_graphs.items():
     method = "2"
-    if "toDO" in filename:
-        # graphen die länger dauern könnten, einzeln testen
-        # check graphs for 80 nodes if they run longer than 12 hours and method 2
-        # grafo4865.80.gml
-        # grafo9795.80.gml
-        # grafo7907.80.gml
-        # check graphs for 90 nodes if they run longer than 12 hours and method 2
-        # grafo7130.90.gml
-        # grafo8558.90.gml
-        # grafo8952.90.gml
-        # grafo8946.90.gml
-        # grafo3756.90.gml
-        # check graphs for 10 nodes if they run longer than 12 hours and method 2
+    if "grafo7130.90.gml" in filename:
+        # graphen die länger dauern könnten, einzeln testen methode 2
+        # check graphs for 80 nodes if they run longer than 18 hours and method 2 --> einmal neu starten bitte !!!
+        # grafo4865.80.gml  --> lädt jahre lang bei 4, bei 5 gibts direktes ergebnis
+        # grafo9795.80.gml  --> lädt jahre lang bei 4, bei 5 gibts direktes ergebnis
+
+        # graphen die länger dauern könnten, einzeln testen methode 3
+        # check graphs for 80 nodes if they run longer than 18 hours and method 3
+        # grafo4865.80.gml  --> lädt jahre lang bei 4, bei 5 gibts direktes ergebnis
+        # grafo9795.80.gml  --> to do
+        # --> to do : 3 rest graphs
 
         graph_class = filename.split('.')[1]
         path = '../results/' + graph_class + "_" + method + ".txt"
@@ -76,7 +74,7 @@ for filename, matrix in test_graphs.items():
 
         with open(path, 'a') as f:
             edges = matrix
-            f.write(f"File: {filename} with {len(edges)} Nodes and {np.sum(matrix)/2} Edges")
+            f.write(f"File: {filename} with {len(edges)} Nodes and {np.sum(matrix) / 2} Edges")
             f.write("\n")
             f.write("------------")
             f.write("\n")
