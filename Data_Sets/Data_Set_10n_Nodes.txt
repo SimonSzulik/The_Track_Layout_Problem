@@ -68,13 +68,13 @@ grafo8187.70.gml
 grafo4558.70.gml
 grafo9297.70.gml
 grafo9569.70.gml
-grafo9582.80.gml -
-grafo5370.80.gml -
-grafo4865.80.gml -
-grafo9096.80.gml -
-grafo9797.80.gml -
-grafo4890.80.gml -
-grafo9795.80.gml -
+grafo9582.80.gml
+grafo5370.80.gml
+grafo4865.80.gml
+grafo9096.80.gml
+grafo9797.80.gml
+grafo4890.80.gml
+grafo9795.80.gml
 grafo7907.80.gml
 grafo8058.80.gml
 grafo5558.80.gml
