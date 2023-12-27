@@ -52,7 +52,7 @@ test_graphs = get_dataset('../Data_Sets/Data_Set_10n_Nodes.txt')
 """
 
 for filename, matrix in test_graphs.items():
-    method = "3"
+    method = "2"
     if "grafo9795.80.gml" in filename:
 
         # ToDo für Methode 2
@@ -74,7 +74,7 @@ for filename, matrix in test_graphs.items():
 
             sys.stdout = f
 
-            while not compute_tlp(len(edges), edges, track_counter, 3):
+            while not compute_tlp(len(edges), edges, track_counter, 2):
                 track_counter += 1
 
             f.write("\n")
