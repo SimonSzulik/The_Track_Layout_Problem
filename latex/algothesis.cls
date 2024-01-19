@@ -145,7 +145,11 @@
 \SetKwInput{Output}{\thesis@algorithmoutput}
 \setlength{\algomargin}{3ex}
 
-\usepackage[fixlanguage]{mybabelbib}
+\usepackage[fixlanguage]{babelbib}
+\newcommand\btxbtitlefont{}
+\let\btxbtitlefont=\@empty
+\newcommand\btxstitlefont{}
+\let\btxstitlefont=\@empty
 \setbibliographyfont{title}{}
 \setbibliographyfont{jtitle}{}
 \setbibliographyfont{btitle}{\emph}
@@ -210,6 +214,7 @@
 \newcommand{\@semester}{}
 \newcommand{\semester}[1]{\gdef\@semester{#1}}
 
+% TODO: adjust maketitle for seminar report
 \if@titlepage
   \renewcommand{\maketitle}{%
     % Detect if we need singular or plural for supervisors
@@ -251,7 +256,7 @@
         {
           Universität Trier\\
           Fachbereich IV - Informatik\\
-          Algorithmik 
+          Algorithmik
         }%
       \end{center}
     \end{titlepage}%

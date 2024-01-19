@@ -1589,4 +1589,3 @@ FUNCTION {end.bib}
 }
 
 EXECUTE {end.bib}
-
