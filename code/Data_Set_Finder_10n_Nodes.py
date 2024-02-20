@@ -22,7 +22,7 @@ import networkx as nx
  * 10 with 100 nodes
 """
 
-# Path to dataset
+# path to dataset
 data_folder_path = '../data'
 
 with open('../Data_Sets/Data_Set_10n_Nodes.txt', 'w') as f:

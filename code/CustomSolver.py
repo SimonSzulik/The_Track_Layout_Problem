@@ -11,8 +11,8 @@
 from pysat.solvers import Lingeling
 
 """
- * ***** custom solver to prevent adding non used variables ***** *
- * *****               mainly for readability               ***** *
+ * ***** custom solver to prevent adding non used variables in Lingelin ***** *
+ * *****                     mainly for readability                     ***** *
 """
 
 

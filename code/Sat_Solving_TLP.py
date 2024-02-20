@@ -35,7 +35,7 @@ def compute_tlp(nodes, graph, tracks, method):
     elif method == 3:
         formula.extend(get_sequence_clauses_relation(nodes, tracks, graph, "Improved"))
     else:
-        print("wrong method")
+        print("Please use 1/2/3")
 
     end = time.time()
     print(len(formula.clauses), "Clauses were created in", end - start, "seconds.")

@@ -13,8 +13,8 @@ from pysat.formula import CNF
 
 # variables of the SAT-Formulations
 node_track_variable = [[]]  # σ(v_i,t_k)
-relational_sequence = [[]]  # ω(v_i,v_j)
 total_sequence = [[]]  # ϕ(v_i,p)
+relational_sequence = [[]]  # ω(v_i,v_j)
 same_track = [[]]  # ψ(v_i,v_j)
 
 """ 
