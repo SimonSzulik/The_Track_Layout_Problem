@@ -203,7 +203,7 @@ calculated to True in 0.0006825923919677734 seconds.
 
 The TLP has the following configuration: 
 
-  ----  7  ----  9  ----  8  ---- 
+  ----  7  ----  9  ----  8  ----
   ----  10  ----  2  ----  3  ----  4  ---- 
   ----  1  ----  5  ----  6  ---- 
 
