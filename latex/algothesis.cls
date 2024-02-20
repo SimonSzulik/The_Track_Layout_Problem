@@ -256,7 +256,7 @@
         {
           Universität Trier\\
           Fachbereich IV - Informatik\\
-          Algorithmik
+          Algorithmik 
         }%
       \end{center}
     \end{titlepage}%
